@@ -1,7 +1,3 @@
-# ssdx-cli
-
-A helper tool to quickly spin up scratch orgs and start develop on Salesforce.
-
 # SSDX CLI
 
 SSDX CLI is a helper tool designed to streamline the process of working with Salesforce DX (SFDX). It provides commands to quickly create and manage scratch orgs, assign resources, and authenticate orgs, making it easier to develop and deploy Salesforce applications.
@@ -78,62 +74,62 @@ The CLI uses a configuration file named `ssdx-config.json` at root level, to def
 
 ```json
 {
-    // optional
-	"default_config": "config/project-scratch-def.json",
-    
-    // runs before installing dependencies
-	"pre_dependencies": [],
-    
-    // runs before metadata push
-	"pre_deploy": [
-		{
-			"type": "permissionSetLicense",
-			"value": "EmbeddedServiceMessagingUserPsl",
-			"continue_on_error": true
-		},
-		{
-			"type": "apex",
-			"value": "bin/apex/enableChatUser.apex",
-			"continue_on_error": true
-		}
-	],
+  // optional
+  "default_config": "config/project-scratch-def.json",
 
-    // runs after metadata push
-	"post_deploy": [
-		{
-			"type": "apex",
-			"value": "bin/apex/addToGroup.apex",
-			"continue_on_error": true
-		},
-		{
-			"type": "js",
-			"value": "bin/js/manipulateMetadataBeforeDeploy.js"
-		},
-		{
-			"type": "metadata",
-			"value": "unpackaged"
-		},
-		{
-			"type": "permissionSet",
-			"value": "PermissionSetGroupDevName"
-		},
-		{
-			"type": "permissionSet",
-			"value": "PermissionSetDevName"
-		}
-	],
+  // runs before installing dependencies
+  "pre_dependencies": [],
 
-    // runs after successfully installing a package to an environment (must be called specifically using the resource command)
-	"post_install": [
-		{
-			"type": "js",
-			"value": "bin/js/manipulateMetadataBeforeDeploy.js"
-		},
-		{
-			"type": "metadata",
-			"value": "unpackaged"
-		}
-	]
+  // runs before metadata push
+  "pre_deploy": [
+    {
+      "type": "permissionSetLicense",
+      "value": "EmbeddedServiceMessagingUserPsl",
+      "continue_on_error": true
+    },
+    {
+      "type": "apex",
+      "value": "bin/apex/enableChatUser.apex",
+      "continue_on_error": true
+    }
+  ],
+
+  // runs after metadata push
+  "post_deploy": [
+    {
+      "type": "apex",
+      "value": "bin/apex/addToGroup.apex",
+      "continue_on_error": true
+    },
+    {
+      "type": "js",
+      "value": "bin/js/manipulateMetadataBeforeDeploy.js"
+    },
+    {
+      "type": "metadata",
+      "value": "unpackaged"
+    },
+    {
+      "type": "permissionSet",
+      "value": "PermissionSetGroupDevName"
+    },
+    {
+      "type": "permissionSet",
+      "value": "PermissionSetDevName"
+    }
+  ],
+
+  // runs after successfully installing a package to an environment (must be called specifically using the resource command)
+  "post_install": [
+    {
+      "type": "js",
+      "value": "bin/js/manipulateMetadataBeforeDeploy.js"
+    },
+    {
+      "type": "metadata",
+      "value": "unpackaged"
+    }
+  ]
 }
 ```
 
