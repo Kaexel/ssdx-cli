@@ -23,7 +23,7 @@ class create_org {
     print.subheader('Create Scratch Org');
 
     await run({
-      cmd: 'npx sf org:create:scratch',
+      cmd: 'sf org:create:scratch',
       args: [
         '--definition-file',
         this.options.configFile,
@@ -65,7 +65,7 @@ class create_org {
     this.spinner = ora('Fetching Username').start();
 
     const { stdout } = await run({
-      cmd: 'npx sf org:display',
+      cmd: 'sf org:display',
       args: ['--target-org', this.options.scratchOrgName, '--json'],
       outputType: OutputType.Silent,
     });

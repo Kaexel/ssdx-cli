@@ -89,7 +89,7 @@ export class SSDX {
       resource.skip = false;
       switch (resource.type) {
         case ResourceType.APEX:
-          resource.cmd = 'npx sf apex:run';
+          resource.cmd = 'sf apex:run';
           resource.args = ['--file', resource.value];
           break;
         case ResourceType.JS:
@@ -97,20 +97,20 @@ export class SSDX {
           resource.args = [resource.value];
           break;
         case ResourceType.SF:
-          resource.cmd = 'npx ' + resource.value;
+          resource.cmd = resource.value;
           resource.args = [];
           break;
         case ResourceType.PERMISSION_SET:
         case ResourceType.PERMISSION_SET_GROUP:
-          resource.cmd = 'npx sf org:assign:permset';
+          resource.cmd = 'sf org:assign:permset';
           resource.args = ['--name', resource.value];
           break;
         case ResourceType.LICENSE:
-          resource.cmd = 'npx sf org:assign:permsetlicense';
+          resource.cmd = 'sf org:assign:permsetlicense';
           resource.args = ['--name', resource.value];
           break;
         case ResourceType.METADATA:
-          resource.cmd = 'npx sf project:deploy:start';
+          resource.cmd = 'sf project:deploy:start';
           resource.args = [
             '--source-dir',
             resource.value,

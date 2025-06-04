@@ -17,7 +17,7 @@ class OrgOpener {
   public async open(): Promise<void> {
     print.subheader('Opening Scratch Org');
     await run({
-      cmd: 'npx sf org:open',
+      cmd: 'sf org:open',
       args: ['--target-org', this.options.scratchOrgName],
       outputType: OutputType.Spinner,
       spinnerText: 'Opened Org Successfully',
