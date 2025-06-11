@@ -5,7 +5,7 @@ on:
       - main
 env:
   VERSION_TEXT: Incrementing npm package version to
-  GET_CURRENT_TAG: npm pkg get version | tr -d '\"'
+  GET_CURRENT_TAG_CMD: npm pkg get version | tr -d '\"'
 jobs:
   publish:
     name: Publish NPM Package
