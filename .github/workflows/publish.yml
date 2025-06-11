@@ -59,7 +59,7 @@ jobs:
         with:
           configuration: .github/changelog/delta_changelog.json
           fromTag: ${{ env.PREVIOUS_TAG }}
-          toTag: ${{ env.CURRENT_TAG }}
+          toTag: ${{ github.sha }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Full Changelog
@@ -69,7 +69,7 @@ jobs:
         with:
           configuration: .github/changelog/full_changelog.json
           fromTag: ${{ env.FIRST_MINOR_TAG }}
-          toTag: ${{ env.CURRENT_TAG }}
+          toTag: ${{ github.sha }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create Release (x.x.x)
