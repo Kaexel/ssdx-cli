@@ -24,14 +24,14 @@ async function queryRecord(query) {
 */
 
 export async function getDefaultOrg(): Promise<string> {
-  const targetOrgOutput = await runCmd('npx sf config:get target-org --json');
+  const targetOrgOutput = await runCmd('sf config:get target-org --json');
   const result: Config = JSON.parse(targetOrgOutput);
   return result.result[0].value;
 }
 
 export async function getDefaultDevhub(spinner: Ora): Promise<string> {
   const devhubUsernameOutput = await runCmd(
-    'npx sf config:get target-dev-hub --json'
+    'sf config:get target-dev-hub --json'
   );
   const result: Config = JSON.parse(devhubUsernameOutput);
   const devHub = result.result[0].value;
@@ -60,7 +60,7 @@ interface devHubOption {
 }
 
 async function getDevhubOptions(): Promise<devHubOption[]> {
-  const devhubList = await runCmd('npx sf org:list --json');
+  const devhubList = await runCmd('sf org:list --json');
   const devHubListObject = JSON.parse(devhubList) as OrgList;
 
   const devHubOptions: devHubOption[] = [];
@@ -75,5 +75,5 @@ async function getDevhubOptions(): Promise<devHubOption[]> {
 }
 
 export function setDefaultDevhub(devhub: string): void {
-  execSync('npx sf config:set target-dev-hub=' + devhub);
+  execSync('sf config:set target-dev-hub=' + devhub);
 }

@@ -29,7 +29,7 @@ class Metadata {
     }
     // TODO: move to new metadata class
     await run({
-      cmd: 'npx sf project:deploy:start',
+      cmd: 'sf project:deploy:start',
       args: [
         '--wait',
         '30',
@@ -48,7 +48,7 @@ class Metadata {
 
   public async resetTracking(): Promise<void> {
     await run({
-      cmd: 'npx sf project:reset:tracking',
+      cmd: 'sf project:reset:tracking',
       args: ['--target-org', this.alias, '--no-prompt'],
       spinnerText: 'Resetting Metadata Tracking',
       outputType: OutputType.Spinner,
