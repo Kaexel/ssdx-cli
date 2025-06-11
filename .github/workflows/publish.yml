@@ -51,7 +51,7 @@ jobs:
         run: |
           echo "FIRST_MINOR_TAG=v$(${{ env.GET_CURRENT_TAG_CMD }} | sed -E 's/([0-9]+\.[0-9]+)\.[0-9]+/\1.0/')" >> $GITHUB_ENV
       - name: Build Delta Changelog
-        uses: mikepenz/release-changelog-builder-action@v4
+        uses: mikepenz/release-changelog-builder-action@v5
         id: delta_changelog
         with:
           configuration: .github/changelog/delta_changelog.json
@@ -61,7 +61,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Full Changelog
         if: ${{ env.FIRST_MINOR_TAG != env.CURRENT_TAG }}
-        uses: mikepenz/release-changelog-builder-action@v4
+        uses: mikepenz/release-changelog-builder-action@v5
         id: full_changelog
         with:
           configuration: .github/changelog/full_changelog.json
