@@ -10,7 +10,10 @@ export default class AuthCommand {
     this.program
       .command('auth')
       .description('Authenticate an org')
-      .option('-n, --env-name <string>', 'The local name of the Scratch Org')
+      .option(
+        '-n, --env-name <string>',
+        'The local alias of the Scratch Org to create'
+      )
       .action((options: AuthOptions) => {
         authenticateOrg(options);
       });
