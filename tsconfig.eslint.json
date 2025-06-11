@@ -8,7 +8,6 @@
     "__tests__",
     "src",
     "eslint.config.ts",
-    "jest.config.js",
     "rollup.config.ts"
   ]
 }
