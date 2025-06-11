@@ -11,12 +11,16 @@ jobs:
         node-version: [16.x, 18.x, 20.x]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
+      - run: npm run lint
       - run: npm run build --if-present
-      - name: Upload Code Coverage
-        uses: codecov/codecov-action@v3.1.0
+      - run: npm install --global @salesforce/cli
+      - run: npm run bin:js -- -V
+      - run: npm run bin:js -- -h
+      - run: npm run bin:js create -- -h
+      - run: npm run bin:js resource -- -h
