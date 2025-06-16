@@ -16,5 +16,6 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           head-branch-regex: 'build|ci|docs|feat|fix|perf|refactor|test'
           title-insert-space: true
+          title-uppercase-head-match: false
           title-update-action: prefix
           title-template: '%headbranch%:'
