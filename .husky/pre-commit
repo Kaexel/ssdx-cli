@@ -1,3 +1,4 @@
 #!/bin/sh
 
 npx lint-staged
+npx branch-name-lint branch.config.json
