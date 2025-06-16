@@ -1,6 +1,7 @@
 {
   "name": "ssdx-cli",
   "version": "1.0.3",
+  "version": "1.0.1",
   "description": "A template for creating npm packages using TypeScript and VSCode",
   "exports": "./build/index.js",
   "typings": "./build/index.d.ts",
@@ -51,6 +52,7 @@
     "@salesforce/kit": "^3.2.3",
     "colors": "^1.4.0",
     "commander": "^14.0.0",
+    "conventional-changelog-conventionalcommits": "^9.0.0",
     "make-dir": "^5.0.0",
     "node-notifier": "^10.0.1",
     "ora": "8.2.0",
@@ -81,56 +83,5 @@
   },
   "lint-staged": {
     "*.ts": "eslint --cache --cache-location .eslintcache --fix --ignore-pattern eslint.config.ts"
-  },
-  "release": {
-    "branches": [
-      "main"
-    ],
-    "plugins": [
-      [
-        "@semantic-release/commit-analyzer",
-        {
-          "preset": "conventionalcommits",
-          "releaseRules": [
-            {
-              "type": "build",
-              "scope": "deps",
-              "release": "patch"
-            }
-          ]
-        }
-      ],
-      [
-        "@semantic-release/release-notes-generator",
-        {
-          "preset": "conventionalcommits",
-          "presetConfig": {
-            "types": [
-              {
-                "type": "feat",
-                "section": "Features"
-              },
-              {
-                "type": "fix",
-                "section": "Bug Fixes"
-              },
-              {
-                "type": "build",
-                "section": "Dependencies and Other Build Updates",
-                "hidden": false
-              }
-            ]
-          }
-        }
-      ],
-      [
-        "@semantic-release/npm",
-        {
-          "npmPublish": true,
-          "tarballDir": "build"
-        }
-      ],
-      "@semantic-release/github"
-    ]
   }
 }
