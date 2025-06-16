@@ -1,6 +1,7 @@
 {
   "branchNameLinter": {
     "prefixes": [
+      "breaking",
       "build",
       "ci",
       "docs",
