@@ -1,68 +1,10 @@
-name: 'Labels'
+name: 'PR'
 on:
   pull_request:
     types: [opened, edited]
-env:
-  BRANCH_PREFIXES: (feature|bug|fix|docs|refactor|test) #! additions here are NOT enough (do a global search for e.g. refactor)
-  BRANCHES: (FKP|SPESP) # changes here are enough
 jobs:
-  branch-naming-rules:
-    name: branch name
-    permissions:
-      contents: read
-      pull-requests: write
-    if: always() && github.event.action == 'opened'
-    continue-on-error: true
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check branch name
-        uses: deepakputhraya/action-branch-name@master
-        with:
-          regex: '^(cleanup\/.+|sync\/.+|CI\/.+)|(dev|preprod|main|master|test)|(${{ env.BRANCH_PREFIXES }}\/${{ env.BRANCHES }}-[0-9]+(-|_)([A-z]|[0-9]|-|_)+)$'
-          # must be either:
-          # cleanup/my-cleanup
-          # dev
-          # preprod
-          # test
-          # master
-          # main
-          # CI/package-version-update
-          # feature/FKP-22-my-feature
-
-      # Post Error Comment
-      - name: Post Error Comment
-        if: failure()
-        uses: peter-evans/create-or-update-comment@v4
-        with:
-          issue-number: ${{ github.event.number }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          body: |
-            # ❌ Error — Incorrect Branch Name
-
-            The branch name must begin with `prefix/JIRA_PROJECT-NUMBER` and end with a name describing the change. For example: `feature/TEAMSAK-123-my-feature`.
-
-            - Allowed prefixes (must be lowercase)
-              - `feature`
-              - `refactor`
-              - `docs`
-              - `test`
-              - `fix`
-              - `bug`
-
-            - Allowed Jira-projects (must be uppercase)
-              - `FKP`
-              - `SPESP`
-
-            - Branch description
-              - The part of the branch after the Jira ticket 
-              - Must contain only letters, numbers, `-` and `_`
-              - No Æ, Ø or Å
-              - No special characters (! or #, etc)
-
-  # ################################################################### #
-
-  validate-pr-title:
-    name: title
+  validate-title:
+    name: Validate Title
     permissions:
       contents: read
       pull-requests: write
