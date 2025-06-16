@@ -6,9 +6,9 @@
       "docs",
       "feat",
       "fix",
-      "perf",
       "refactor",
-      "test"
+      "test",
+      "dependabot"
     ],
     "suggestions": {
       "features": "feat",
