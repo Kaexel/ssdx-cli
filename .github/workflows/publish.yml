@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'src/**'
 env:
   VERSION_TEXT: Incrementing npm package version to
   GET_CURRENT_TAG_CMD: npm pkg get version | tr -d '\"'
