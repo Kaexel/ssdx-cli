@@ -1,6 +1,0 @@
-enhancement: ['feature/*', 'enhancement/*']
-bug: ['fix/*', 'bug/*']
-test: test/*
-documentation: docs/*
-refactor: refactor/*
-dependabot: dependabot/*

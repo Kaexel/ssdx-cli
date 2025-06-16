@@ -14,7 +14,7 @@ jobs:
         uses: the-wright-jamie/update-pr-info-action@v1.1.0
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          head-branch-regex: 'breaking|feat|fix|refactor|test|docs|ci|build|dependabot'
+          head-branch-regex: 'breaking|feature|refactor|fix|ci|dependabot|test|docs'
           title-insert-space: true
           title-uppercase-head-match: false
           title-update-action: prefix
