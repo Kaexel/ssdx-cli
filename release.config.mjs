@@ -7,7 +7,6 @@ export default {
     [
       '@semantic-release/commit-analyzer',
       {
-        preset: 'conventionalcommits',
         releaseRules: [
           { type: 'breaking', release: 'major' },
           { type: 'feat', release: 'minor' },
@@ -22,7 +21,6 @@ export default {
     [
       '@semantic-release/release-notes-generator',
       {
-        preset: 'conventionalcommits',
         presetConfig: {
           types: [
             { type: 'breaking', section: 'Breaking Changes' },
