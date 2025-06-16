@@ -10,13 +10,17 @@ SSDX CLI is a helper tool designed to streamline the process of working with Sal
 
 ## Installation
 
-To install SSDX CLI, ensure you have Node.js (>=20) installed, then run:
+To install SSDX CLI, ensure you have Node.js (>=20) and install [ssdx-cli from npm](https://www.npmjs.com/package/ssdx-cli):
 
 ```bash
-npm install -g ssdx-cli
+npm install ssdx-cli --global
 ```
 
-Can also be installed and used locally.
+Or locally:
+
+```bash
+npm install ssdx-cli --save-dev
+```
 
 # Commands
 

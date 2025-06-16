@@ -1,0 +1,30 @@
+{
+  "branchNameLinter": {
+    "prefixes": [
+      "build",
+      "ci",
+      "docs",
+      "feat",
+      "fix",
+      "perf",
+      "refactor",
+      "test"
+    ],
+    "suggestions": {
+      "features": "feat",
+      "feature": "feat",
+      "bug": "fix"
+    },
+    "banned": [],
+    "skip": [],
+    "disallowed": [],
+    "separator": "/",
+    "branchNameEnvVariable": false,
+    "branch": false,
+    "msgBranchBanned": "Branches with the name \"%s\" are not allowed.",
+    "msgBranchDisallowed": "Pushing to \"%s\" is not allowed, use git-flow.",
+    "msgPrefixNotAllowed": "Branch prefix \"%s\" is not allowed (try build, ci, docs, feat, fix, perf, refactor or test).",
+    "msgPrefixSuggestion": "Instead of \"%s\" try \"%s\".",
+    "msgSeparatorRequired": "Branch \"%s\" must contain a separator \"%s\"."
+  }
+}
