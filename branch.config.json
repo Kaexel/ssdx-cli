@@ -17,7 +17,7 @@
     },
     "banned": [],
     "skip": [],
-    "disallowed": ["main"],
+    "disallowed": ["main", "beta"],
     "separator": "/",
     "branchNameEnvVariable": false,
     "branch": false,
