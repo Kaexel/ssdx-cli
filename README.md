@@ -137,10 +137,6 @@ The CLI uses a configuration file named `ssdx-config.json` at root level, to def
 }
 ```
 
-# Contributing
-
-Contributions are welcome! Please follow the conventional commit spec for commit messages.
-
 # License
 
 This project is licensed under the MIT License.
