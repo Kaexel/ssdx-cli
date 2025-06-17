@@ -16,8 +16,8 @@
       "bug": "fix"
     },
     "banned": [],
-    "skip": [],
-    "disallowed": ["main", "beta"],
+    "skip": ["main", "beta"],
+    "disallowed": [],
     "separator": "/",
     "branchNameEnvVariable": false,
     "branch": false,
