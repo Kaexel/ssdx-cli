@@ -59,6 +59,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.28.0",
+    "@semantic-release/exec": "^7.1.0",
     "@sindresorhus/tsconfig": "^7.0.0",
     "@types/node": "^22.15.29",
     "@types/node-notifier": "^8.0.5",
