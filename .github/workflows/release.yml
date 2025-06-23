@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-env:
-  VERSION_TEXT: Incrementing npm package version to
-  GET_CURRENT_TAG_CMD: npm pkg get version | tr -d '\"'
 jobs:
   publish:
     name: Release
@@ -28,8 +25,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: git add package.json package-lock.json
-      - run: echo "VERSION=$(${{ env.GET_CURRENT_TAG_CMD }})" >> $GITHUB_ENV
-      - run: git commit -m '${{ env.VERSION_TEXT }} ${{ env.VERSION }}'
-      - run: echo '::notice::${{ env.VERSION_TEXT }} ${{ env.VERSION }}'
-      - run: git push origin HEAD:${{ github.ref_name }}
+      - name: Fetch npm version
+        run: echo "VERSION=$(npm pkg get version | tr -d '\"')" >> $GITHUB_ENV
+      - name: Check if version changed
+        id: check-package
+        run: echo "changed=$(git diff --quiet HEAD^ HEAD -- package.json package-lock.json && echo false || echo true)" >> $GITHUB_OUTPUT
+      - name: Commit and Push Changes
+        uses: GuillaumeFalourd/git-commit-push@v1.3
+        if: steps.check-package.outputs.changed == 'true'
+        with:
+          commit_message: Incrementing npm package version to ${{ env.VERSION }}
+          files: package.json package-lock.json
