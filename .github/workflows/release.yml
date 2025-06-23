@@ -39,3 +39,5 @@ jobs:
           commit_message: Incrementing npm package version to ${{ env.VERSION }}
           files: package.json package-lock.json
           access_token: ${{ secrets.GITHUB_TOKEN }}
+          email: 41898282+github-actions[bot]@users.noreply.github.com
+          name: github-actions[bot]
