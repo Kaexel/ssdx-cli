@@ -29,7 +29,7 @@ jobs:
         run: echo "VERSION=$(npm pkg get version | tr -d '\"')" >> $GITHUB_ENV
       - name: Check if version changed
         id: check-package
-        run: echo "changed=$(git diff --quiet HEAD^ HEAD -- package.json package-lock.json && echo false || echo true)" >> $GITHUB_OUTPUT
+        run: echo "changed=$(git diff --quiet -- package.json && echo "false" || echo "true")" >> $GITHUB_OUTPUT
       - name: Commit and Push Changes
         uses: GuillaumeFalourd/git-commit-push@v1.3
         if: steps.check-package.outputs.changed == 'true'
