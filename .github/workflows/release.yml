@@ -33,9 +33,9 @@ jobs:
       - name: Check if version changed
         id: check-package
         run: echo "changed=$(git diff --quiet -- package.json && echo "false" || echo "true")" >> $GITHUB_OUTPUT
-      - name: Commit and Push Changes
-        uses: GuillaumeFalourd/git-commit-push@v1.3
+      - uses: GuillaumeFalourd/git-commit-push@v1.3
         if: steps.check-package.outputs.changed == 'true'
         with:
           commit_message: Incrementing npm package version to ${{ env.VERSION }}
           files: package.json package-lock.json
+          access_token: ${{ secrets.GITHUB_TOKEN }}
