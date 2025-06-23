@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+env:
+  VERSION_TEXT: Incrementing npm package version to
+  GET_CURRENT_TAG_CMD: npm pkg get version | tr -d '\"'
 jobs:
   publish:
     name: Release
@@ -25,4 +28,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: cat ./package.json
+      - run: git add package.json package-lock.json
+      - run: echo "VERSION=$(${{ env.GET_CURRENT_TAG_CMD }})" >> $GITHUB_ENV
+      - run: git commit -m '${{ env.VERSION_TEXT }} ${{ env.VERSION }}'
+      - run: echo '::notice::${{ env.VERSION_TEXT }} ${{ env.VERSION }}'
+      - run: git push origin HEAD:${{ github.ref_name }}
