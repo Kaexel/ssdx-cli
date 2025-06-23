@@ -1,4 +1,4 @@
-name: Pull Request Validation
+name: '[PR] Validation'
 on: [pull_request]
 jobs:
   build:
