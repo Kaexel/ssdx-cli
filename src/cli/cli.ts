@@ -2,6 +2,7 @@ import { Command } from 'commander';
 import CreateCommand from './create/create.command.js';
 import { ResourceCommand } from './resource-assignment-manager/resource.command.js';
 import { logger } from 'lib/log.js';
+import { VERSION } from './version.js';
 
 export default class cli {
   protected static program = new Command();
@@ -12,12 +13,12 @@ export default class cli {
   }
 
   public run(): void {
-    logger.info(`SSDX version: ${process.env.npm_package_version}`);
+    logger.info(`SSDX version: ${VERSION}`);
     logger.info(`Node version: ${process.version}`);
     cli.program
       .name('ssdx-cli')
       .description('Salesforce DX cli helper tool')
-      .version(process.env.npm_package_version as string);
+      .version(VERSION as string);
 
     cli.program.parse();
   }

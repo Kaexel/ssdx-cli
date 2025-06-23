@@ -46,5 +46,5 @@ module.exports = defineConfig([
       '@typescript-eslint/no-explicit-any': 'off',
     },
   },
-  globalIgnores(['src/types/global.d.ts', 'build/*']),
+  globalIgnores(['src/types/global.d.ts', 'build/*', 'scripts/*']),
 ]);
