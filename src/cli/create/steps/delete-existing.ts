@@ -72,7 +72,7 @@ class OrgManager {
 
     try {
       // Use the remove method which handles all cleanup
-      await this.currentScratchOrg?.remove();
+      await this.currentScratchOrg?.delete();
 
       this.spinner.succeed('Existing scratch org deleted successfully');
     } catch (error) {
