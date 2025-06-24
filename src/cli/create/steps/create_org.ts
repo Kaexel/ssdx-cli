@@ -8,7 +8,7 @@ import {
 } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
 import { handleProcessSignals } from 'lib/process.js';
-import { readOrgDefinition } from 'lib/config/sf-config.js';
+import { getDevHub, readOrgDefinition } from 'lib/config/sf-config.js';
 
 export async function createScratchOrg(options: CreateOptions): Promise<void> {
   const org = new create_org(options);
@@ -35,9 +35,7 @@ class create_org {
   }
 
   public async setDevHub(): Promise<void> {
-    this.hubOrg = await Org.create({
-      aliasOrUsername: this.options.targetDevHub,
-    });
+    this.hubOrg = await getDevHub(this.options);
   }
 
   public async setOrgConfig(): Promise<void> {

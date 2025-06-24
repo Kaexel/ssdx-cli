@@ -1,6 +1,6 @@
 import CreateOptions from 'cli/create/dto/create-options.dto.js';
 import { promises as fs } from 'fs';
-
+import { Org } from '@salesforce/core';
 interface SfConfig {
   'target-dev-hub'?: string;
   'target-org'?: string;
@@ -16,14 +16,36 @@ export async function openConfig(): Promise<SfConfig> {
   }
 }
 
-export async function getCurrentScratchOrg(): Promise<string | undefined> {
+async function getCurrentScratchOrgAlias(): Promise<string | undefined> {
   const config = await openConfig();
   return config['target-org'];
 }
 
-export async function getCurrentDevHub(): Promise<string | undefined> {
+async function getCurrentDevHubAlias(): Promise<string | undefined> {
   const config = await openConfig();
   return config['target-dev-hub'];
+}
+
+export async function getOrg(alias: string): Promise<Org> {
+  return Org.create({ aliasOrUsername: alias });
+}
+
+export async function getCurrentScratchOrg(): Promise<Org> {
+  const alias = await getCurrentScratchOrgAlias();
+  if (!alias) {
+    throw new Error('No active Scratch Org found. Please create one first.');
+  }
+  return getOrg(alias);
+}
+
+export async function getDevHub(options: CreateOptions): Promise<Org> {
+  const alias = options.targetDevHub || (await getCurrentDevHubAlias());
+
+  if (!alias) {
+    throw new Error('No default DevHub found. Please create one first.');
+  }
+
+  return getOrg(alias);
 }
 
 export async function readOrgDefinition(
