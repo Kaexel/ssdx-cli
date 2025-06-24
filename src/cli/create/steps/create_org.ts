@@ -4,20 +4,24 @@ import CreateOptions from '../dto/create-options.dto.js';
 import {
   ScratchOrgCreateOptions,
   scratchOrgCreate,
-  Org as SfOrg,
+  Org,
 } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
 import { handleProcessSignals } from 'lib/process.js';
+import { readOrgDefinition } from 'lib/config/sf-config.js';
 
 export async function createScratchOrg(options: CreateOptions): Promise<void> {
   const org = new create_org(options);
   org.init();
+  await org.setDevHub();
   await org.createScratchOrg();
 }
 
 class create_org {
   options: CreateOptions;
   spinner!: Ora;
+  hubOrg!: Org;
+  orgConfig!: Record<string, unknown>;
 
   constructor(options: CreateOptions) {
     this.options = options;
@@ -25,34 +29,37 @@ class create_org {
 
   public init(): void {
     print.subheader('Create Scratch Org');
-
     this.spinner = ora('Creating Scratch Org').start();
-
-    // Set up signal handling AFTER spinner is created
     handleProcessSignals(this.spinner);
+  }
+
+  public async setDevHub(): Promise<void> {
+    this.hubOrg = await Org.create({
+      aliasOrUsername: this.options.targetDevHub,
+    });
+  }
+
+  public async setOrgConfig(): Promise<void> {
+    this.orgConfig = await readOrgDefinition(this.options);
+  }
+
+  get scratchOrgOptions(): ScratchOrgCreateOptions {
+    return {
+      hubOrg: this.hubOrg,
+      alias: this.options.scratchOrgName,
+      durationDays: parseInt(this.options.durationDays),
+      orgConfig: this.orgConfig,
+      wait: Duration.minutes(45),
+      setDefault: true, // TODO: set to false and make default at the end of the process
+      tracksSource: true, // default behavior
+    };
   }
 
   public async createScratchOrg(): Promise<void> {
     try {
-      // Get the hub org (dev hub)
-      const hubOrg = await SfOrg.create({
-        aliasOrUsername: this.options.targetDevHub,
-      });
-
-      // Read the org definition file
-      const orgConfig = await this.readOrgDefinition();
-
-      const scratchOrgOptions: ScratchOrgCreateOptions = {
-        hubOrg,
-        alias: this.options.scratchOrgName,
-        durationDays: parseInt(this.options.durationDays),
-        orgConfig,
-        wait: Duration.minutes(45), // equivalent to --wait 45
-        setDefault: true,
-        tracksSource: true, // default behavior
-      };
-
-      this.options.scratchOrgResult = await scratchOrgCreate(scratchOrgOptions);
+      this.options.scratchOrgResult = await scratchOrgCreate(
+        this.scratchOrgOptions
+      );
 
       this.spinner.suffixText = `(successfully created org ${this.options.scratchOrgResult.username})`;
       this.spinner.succeed();
@@ -60,28 +67,6 @@ class create_org {
       this.spinner.fail('Failed to create Scratch Org');
       console.error(error);
       throw error;
-    }
-  }
-
-  private async readOrgDefinition(): Promise<Record<string, unknown>> {
-    try {
-      const fs = await import('fs/promises');
-      const definitionContent = await fs.readFile(
-        this.options.configFile,
-        'utf8'
-      );
-      return JSON.parse(definitionContent) as Record<string, unknown>;
-    } catch (error) {
-      throw new Error(
-        `Failed to read org definition file: ${this.options.configFile}. ${String(error)}`
-      );
-    }
-  }
-
-  public fetchUsername(): void {
-    // This is no longer needed since scratchOrgCreate returns the result directly
-    if (this.options.scratchOrgResult?.username) {
-      print.info(`Username: ${this.options.scratchOrgResult.username}`, false);
     }
   }
 }
