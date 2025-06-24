@@ -1,77 +1,69 @@
 import ora, { Ora } from 'ora';
-import * as print from 'lib/print-helper.js';
 import CreateOptions from '../dto/create-options.dto.js';
-// import { ScratchOrgCreateResult, scratchOrgCreate } from '@salesforce/core';
-// import { exit } from 'node:process';
-import { OutputType, run } from 'lib/command-helper.js';
-import { Org } from '../dto/org.dto.js';
+import {
+  ScratchOrgCreateOptions,
+  scratchOrgCreate,
+  Org,
+} from '@salesforce/core';
+import { Duration } from '@salesforce/kit';
+import { handleProcessSignals } from 'lib/process.js';
+import { getDevHub, readOrgDefinition } from 'lib/config/sf-config.js';
 
 export async function createScratchOrg(options: CreateOptions): Promise<void> {
   const org = new create_org(options);
+  org.init();
+  await org.setDevHub();
+  await org.setOrgConfig();
   await org.createScratchOrg();
-  await org.fetchUsername();
 }
 
 class create_org {
   options: CreateOptions;
   spinner!: Ora;
+  hubOrg!: Org;
+  orgConfig!: Record<string, unknown>;
+
   constructor(options: CreateOptions) {
     this.options = options;
   }
 
-  public async createScratchOrg(): Promise<void> {
-    print.subheader('Create Scratch Org');
+  public init(): void {
+    this.spinner = ora('Creating Scratch Org').start();
+    handleProcessSignals(this.spinner);
+  }
 
-    await run({
-      cmd: 'sf org:create:scratch',
-      args: [
-        '--definition-file',
-        this.options.configFile,
-        '--alias',
-        this.options.scratchOrgName,
-        '--duration-days',
-        this.options.durationDays,
-        '--set-default',
-        '--wait',
-        '45',
-      ],
-      outputType: OutputType.OutputLive,
-    });
+  public async setDevHub(): Promise<void> {
+    this.hubOrg = await getDevHub(this.options);
+  }
 
-    this.options.scratchOrgResult = {
-      username: this.options.scratchOrgName,
-      warnings: [],
+  public async setOrgConfig(): Promise<void> {
+    this.orgConfig = await readOrgDefinition(this.options);
+  }
+
+  get scratchOrgOptions(): ScratchOrgCreateOptions {
+    return {
+      hubOrg: this.hubOrg,
+      alias: this.options.scratchOrgName,
+      durationDays: parseInt(this.options.durationDays),
+      orgConfig: this.orgConfig,
+      wait: Duration.minutes(45),
+      setDefault: true, // TODO: set to false and make default at the end of the process
+      tracksSource: true,
     };
   }
 
-  // TODO: bruk scratchOrgResume for å hente ut resultatet og bruke ora
+  public async createScratchOrg(): Promise<void> {
+    try {
+      this.options.scratchOrgResult = await scratchOrgCreate(
+        this.scratchOrgOptions
+      );
 
-  // const spinner = ora('Creating Scratch Org').start();
-  // try {
-  //   this.options.scratchOrgResult = await scratchOrgCreate(
-  //     this.options.scratchOrgConfig
-  //   );
-  //   spinner.suffixText = `(successfully created org ${this.options.scratchOrgResult.username})`;
-  //   spinner.succeed();
-  // } catch (error) {
-  //   spinner.fail('Failed to create Scratch Org');
-  //   console.error(error);
-  //   exit(1);
-  // }
-
-  public async fetchUsername(): Promise<void> {
-    print.info('', false);
-
-    this.spinner = ora('Fetching Username').start();
-
-    const { stdout } = await run({
-      cmd: 'sf org:display',
-      args: ['--target-org', this.options.scratchOrgName, '--json'],
-      outputType: OutputType.Silent,
-    });
-
-    const org: Org = stdout && JSON.parse(stdout[0]);
-    this.spinner.text = `Creating Scratch Org (username: ${org.result.username})`;
-    this.spinner.succeed();
+      this.spinner.suffixText = `(successfully created org ${this.options.scratchOrgResult.username})`;
+      this.spinner.succeed();
+    } catch (error) {
+      this.spinner.fail('Failed to create Scratch Org');
+      console.error(error);
+      throw error;
+    }
   }
 }

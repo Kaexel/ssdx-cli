@@ -20,3 +20,8 @@ export const logger = pino({
 
 export const loggerInfo = logger.info.bind(logger);
 export const loggerError = logger.error.bind(logger);
+
+export function throwError(message: string): never {
+  loggerError(message);
+  throw new Error(message);
+}
