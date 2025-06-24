@@ -14,6 +14,7 @@ export async function createScratchOrg(options: CreateOptions): Promise<void> {
   const org = new create_org(options);
   org.init();
   await org.setDevHub();
+  await org.setOrgConfig();
   await org.createScratchOrg();
 }
 
@@ -51,7 +52,7 @@ class create_org {
       orgConfig: this.orgConfig,
       wait: Duration.minutes(45),
       setDefault: true, // TODO: set to false and make default at the end of the process
-      tracksSource: true, // default behavior
+      tracksSource: true,
     };
   }
 
