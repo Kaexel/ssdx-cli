@@ -1,5 +1,4 @@
 import ora, { Ora } from 'ora';
-import * as print from 'lib/print-helper.js';
 import CreateOptions from '../dto/create-options.dto.js';
 import {
   ScratchOrgCreateOptions,
@@ -29,7 +28,6 @@ class create_org {
   }
 
   public init(): void {
-    print.subheader('Create Scratch Org');
     this.spinner = ora('Creating Scratch Org').start();
     handleProcessSignals(this.spinner);
   }

@@ -1,3 +1,4 @@
+import * as print from 'lib/print-helper.js';
 import { Command } from 'commander';
 import CreateOptions from './dto/create-options.dto.js';
 import { createScratchOrg } from './steps/create_org.js';
@@ -7,6 +8,7 @@ import { clearingTracking, deployMetadata } from './steps/deploy_metadata.js';
 import { openOrg } from './steps/open_org.js';
 import { getSlotOptions } from 'cli/resource-assignment-manager/dto/resource-config.dto.js';
 import { resourceAssignmentManager } from 'cli/resource-assignment-manager/resource.command.js';
+import { delete_question } from './steps/delete-existing.js';
 
 export default class CreateCommand {
   options!: CreateOptions;
@@ -43,7 +45,10 @@ export default class CreateCommand {
       });
   }
   private async main() {
+    print.subheader('Create Scratch Org');
+
     await initialize(this.options);
+    await delete_question(this.options);
     await createScratchOrg(this.options);
 
     // assigner slots

@@ -1,6 +1,8 @@
 import CreateOptions from 'cli/create/dto/create-options.dto.js';
 import { promises as fs } from 'fs';
 import { Org } from '@salesforce/core';
+import { logger, throwError } from 'lib/log.js';
+
 interface SfConfig {
   'target-dev-hub'?: string;
   'target-org'?: string;
@@ -16,36 +18,48 @@ export async function openConfig(): Promise<SfConfig> {
   }
 }
 
-async function getCurrentScratchOrgAlias(): Promise<string | undefined> {
+/* ------------------------------- scratch org ------------------------------ */
+
+export async function getCurrentScratchOrg(): Promise<Org | undefined> {
+  const alias = await getCurrentScratchOrgAlias();
+  return await getOrg(alias);
+}
+export async function getCurrentScratchOrgAlias(): Promise<string | undefined> {
   const config = await openConfig();
   return config['target-org'];
 }
 
-async function getCurrentDevHubAlias(): Promise<string | undefined> {
-  const config = await openConfig();
-  return config['target-dev-hub'];
-}
-
-export async function getOrg(alias: string): Promise<Org> {
-  return Org.create({ aliasOrUsername: alias });
-}
-
-export async function getCurrentScratchOrg(): Promise<Org> {
-  const alias = await getCurrentScratchOrgAlias();
-  if (!alias) {
-    throw new Error('No active Scratch Org found. Please create one first.');
-  }
-  return getOrg(alias);
-}
+/* --------------------------------- devhub --------------------------------- */
 
 export async function getDevHub(options: CreateOptions): Promise<Org> {
   const alias = options.targetDevHub || (await getCurrentDevHubAlias());
 
   if (!alias) {
-    throw new Error('No default DevHub found. Please create one first.');
+    throwError('No default DevHub found. Please authenticate one.');
   }
 
-  return getOrg(alias);
+  const org = await getOrg(alias);
+  if (!org) {
+    throwError(`DevHub with alias ${alias} not found.`);
+  }
+
+  return org;
+}
+
+export async function getCurrentDevHubAlias(): Promise<string | undefined> {
+  const config = await openConfig();
+  return config['target-dev-hub'];
+}
+
+/* --------------------------------- shared --------------------------------- */
+
+export async function getOrg(alias?: string): Promise<Org | undefined> {
+  try {
+    return await Org.create({ aliasOrUsername: alias });
+  } catch (error) {
+    logger.error(`Failed to get org with alias ${alias}: ${String(error)}`);
+    return undefined;
+  }
 }
 
 export async function readOrgDefinition(
@@ -56,7 +70,7 @@ export async function readOrgDefinition(
     const definitionContent = await fs.readFile(options.configFile, 'utf8');
     return JSON.parse(definitionContent) as Record<string, unknown>;
   } catch (error) {
-    throw new Error(
+    throwError(
       `Failed to read org definition file: ${options.configFile}. ${String(error)}`
     );
   }

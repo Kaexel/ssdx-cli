@@ -111,11 +111,16 @@ class initializer {
   }
 
   public async getDevhub(): Promise<void> {
+    const spinner = ora('Fetching DevHub info').start(); // TODO: print the devhub used
     if (this.options.targetDevHub) return;
-    print.info('', false);
-    const spinner = ora('Fetching DevHub info ...').start(); // TODO: print the devhub used
-    this.options.targetDevHub =
-      (await getDefaultDevhub(spinner)) || (await chooseDevhub(spinner));
+    this.options.targetDevHub = await getDefaultDevhub();
+
+    if (this.options.targetDevHub) {
+      spinner.succeed();
+    } else {
+      spinner.fail('No default DevHub found.');
+      this.options.targetDevHub = await chooseDevhub();
+    }
   }
 
   public async setDevhub(): Promise<void> {
