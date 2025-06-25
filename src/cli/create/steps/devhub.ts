@@ -4,23 +4,6 @@ import select from '@inquirer/select';
 import colors from 'colors/safe.js';
 import { runCmd } from 'lib/command-helper.js';
 
-// TODO: change to native query method
-/*
-async function getConnection() {
-	return (
-		await core.Org.create({
-			aliasOrUsername: TARGET_ORG
-		})
-	).getConnection();
-}
-
-async function queryRecord(query) {
-	const conn = await getConnection();
-	return (await conn.query(query)).records[0].Id;
-}
-
-*/
-
 export async function chooseDevhub(): Promise<string> {
   const devHubOptions: { name: string; value: string }[] = await getDevhubOptions();
 
