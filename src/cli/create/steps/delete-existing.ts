@@ -26,7 +26,7 @@ class OrgManager {
   public async checkIfActiveScratchOrg(): Promise<boolean> {
     this.currentScratchOrg = await getCurrentScratchOrg();
 
-    if (!this.currentScratchOrg || (await this.notScratchOrg())) {
+    if (!this.currentScratchOrg || this.options.keepExistingOrg || (await this.notScratchOrg())) {
       return false;
     }
 
