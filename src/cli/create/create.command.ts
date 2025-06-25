@@ -36,6 +36,9 @@ export default class CreateCommand {
       .option('--skip-dependencies', 'Skip dependency installation')
       .option('--skip-deployment', 'Skip deployment step')
 
+      .optionsGroup('Debug')
+      .option('--keep-existing-org', 'Keep the existing Scratch Org')
+
       .action((options: CreateOptions) => {
         this.options = options;
         void this.main();
