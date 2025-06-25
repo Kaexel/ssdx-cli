@@ -24,11 +24,7 @@ export class ResourceAssignmentManager {
   public async run(): Promise<void> {
     if (!this.ssdxConfig.hasResources()) return;
 
-    print.subheader(
-      this.ssdxConfig.resourceTypes.join(', ') + ' Steps',
-      undefined,
-      Color.bgCyan
-    );
+    print.subheader(this.ssdxConfig.resourceTypes.join(', ') + ' Steps', undefined, Color.bgCyan);
 
     for (const resource of this.ssdxConfig.resources) {
       await this.waitForPermsetGroup(resource);
@@ -55,9 +51,7 @@ export class ResourceAssignmentManager {
     }
 
     if (output.totalSize === 0) {
-      logger.error(
-        `Permission set group '${resource.value}' did not update after ${this.max} attempts`
-      );
+      logger.error(`Permission set group '${resource.value}' did not update after ${this.max} attempts`);
       spinner.fail();
     } else {
       spinner.succeed();
@@ -73,10 +67,7 @@ export class ResourceAssignmentManager {
 
   private async runResource(resource: Resource): Promise<void> {
     if (resource.skip) return this.skipResource(resource);
-    logger.info(
-      resource,
-      'Running resource from resource-assignment-manager.ts'
-    );
+    logger.info(resource, 'Running resource from resource-assignment-manager.ts');
 
     this.addTargetOrg(resource);
 
@@ -105,15 +96,12 @@ export class ResourceAssignmentManager {
 
   private getOutputType(resource: Resource): OutputType {
     if (this.options.ci) return OutputType.OutputLiveWithHeader;
-    if (this.options.showOutput || resource.print_output)
-      return OutputType.SpinnerAndOutput;
+    if (this.options.showOutput || resource.print_output) return OutputType.SpinnerAndOutput;
     return OutputType.Spinner;
   }
 
   private skipResource(resource: Resource) {
-    const spinnerText =
-      this.getSpinnerText(resource) +
-      '...  SKIPPING due to invalid configuration type';
+    const spinnerText = this.getSpinnerText(resource) + '...  SKIPPING due to invalid configuration type';
     ora(spinnerText).warn();
     return;
   }

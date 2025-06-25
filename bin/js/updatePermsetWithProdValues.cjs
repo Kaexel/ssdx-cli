@@ -48,9 +48,7 @@ const FILE = 'bin/metadata/permissionsets/post_deploy.permissionset-meta.xml';
 const CLASS_NAME = 'MyClass';
 
 async function run() {
-  const classRecord = await queryRecord(
-    `SELECT Name FROM ApexClass WHERE Name = '${CLASS_NAME}' LIMIT 1`
-  ); // bad example, because you already have the class name, but you can query any other information you need and use however you want
+  const classRecord = await queryRecord(`SELECT Name FROM ApexClass WHERE Name = '${CLASS_NAME}' LIMIT 1`); // bad example, because you already have the class name, but you can query any other information you need and use however you want
 
   // Read the permset
   let permset = fs.readFileSync(FILE, 'utf-8');

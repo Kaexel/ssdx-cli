@@ -5,9 +5,7 @@ import * as print from 'lib/print-helper.js';
 import { run, OutputType } from 'lib/command-helper.js';
 import SfdxProject from '../dto/sfdx-project.dto.js';
 
-export async function installDependencies(
-  options: CreateOptions
-): Promise<void> {
+export async function installDependencies(options: CreateOptions): Promise<void> {
   const dependencies = new Dependencies(options);
   await dependencies.install();
 }
@@ -84,8 +82,7 @@ class Dependencies {
       this.sfdxProject.packageDirectories[0].dependencies &&
       this.sfdxProject.packageDirectories[0].dependencies.length > 0
     ) {
-      for (const dependency of this.sfdxProject.packageDirectories[0]
-        .dependencies) {
+      for (const dependency of this.sfdxProject.packageDirectories[0].dependencies) {
         if (dependency.versionNumber) {
           dependencies.push(`${dependency.package}:${this.packageKey}`);
         }

@@ -14,22 +14,8 @@ function edge_length(edge: string): number {
 }
 
 export function frame(frameOptions: frameOptions): string {
-  const {
-    text,
-    subText,
-    full_width,
-    half_width,
-    is_center_text,
-    top,
-    bottom,
-    separator,
-    edge,
-  } = frameOptions;
-  const width = full_width
-    ? full_width_length(edge)
-    : half_width
-      ? half_width_length(edge)
-      : text.length;
+  const { text, subText, full_width, half_width, is_center_text, top, bottom, separator, edge } = frameOptions;
+  const width = full_width ? full_width_length(edge) : half_width ? half_width_length(edge) : text.length;
 
   const output = [];
 
@@ -45,12 +31,7 @@ export function frame(frameOptions: frameOptions): string {
   return '\n ' + output.join(' \n ') + ' \n';
 }
 
-function getMiddleText(
-  width: number,
-  is_center_text: boolean,
-  edge: string,
-  text?: string
-) {
+function getMiddleText(width: number, is_center_text: boolean, edge: string, text?: string) {
   if (!text) return undefined;
   if (text.length > width) text = text.substring(0, width - 4) + '...';
   text = is_center_text ? center_text(text, width) : normal_text(text, width);

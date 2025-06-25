@@ -3,11 +3,7 @@ import { SlotOption } from './dto/resource-config.dto.js';
 import { getDefaultOrg } from 'cli/create/steps/devhub.js';
 import { ResourceAssignmentManager } from './resource-assignment-manager.js';
 import { OutputType, run } from 'lib/command-helper.js';
-import {
-  Color,
-  setColor,
-  setColors,
-} from 'lib/print-helper/print-helper-formatter.js';
+import { Color, setColor, setColors } from 'lib/print-helper/print-helper-formatter.js';
 import { Org } from 'cli/create/dto/org.dto.js';
 
 const DESCRIPTION = `${setColors('Configurable resource assignment to orgs. This option allows:', [Color.yellow, Color.bold])}
@@ -35,11 +31,7 @@ export class ResourceCommand {
       .option('--post-deploy', 'Runs "post_deploy" resources', false)
       .option('--post-install', 'Runs "post_install" resources', false)
       .option('--show-output', 'Show output of resource assignments', false)
-      .option(
-        '-l --test-level <string>',
-        'For metadata operation, choose the test level',
-        'NoTestRun'
-      )
+      .option('-l --test-level <string>', 'For metadata operation, choose the test level', 'NoTestRun')
       .option('--ci', 'Disables fancy feature for a slimmer output', false)
       .action((options: SlotOption) => {
         void resourceAssignmentManager(options);

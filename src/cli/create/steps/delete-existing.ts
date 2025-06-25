@@ -3,10 +3,7 @@ import ora, { Ora } from 'ora';
 import CreateOptions from '../dto/create-options.dto.js';
 import { Org } from '@salesforce/core';
 import { confirm } from '@inquirer/prompts';
-import {
-  getCurrentScratchOrg,
-  getCurrentScratchOrgAlias,
-} from 'lib/config/sf-config.js';
+import { getCurrentScratchOrg, getCurrentScratchOrgAlias } from 'lib/config/sf-config.js';
 import { logger } from 'lib/log.js';
 
 export async function delete_question(options: CreateOptions): Promise<void> {

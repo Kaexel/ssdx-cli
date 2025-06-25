@@ -38,13 +38,8 @@ class initializer {
   }
 
   public setScratchOrgConfig(): void {
-    this.options.scratchOrgConfig.durationDays = parseInt(
-      this.options.durationDays
-    );
-    this.options.scratchOrgConfig.wait = new Duration(
-      45,
-      Duration.Unit.MINUTES
-    );
+    this.options.scratchOrgConfig.durationDays = parseInt(this.options.durationDays);
+    this.options.scratchOrgConfig.wait = new Duration(45, Duration.Unit.MINUTES);
     this.options.scratchOrgConfig.setDefault = true;
   }
 
@@ -92,9 +87,7 @@ class initializer {
   }
 
   public setConfig() {
-    this.options.scratchOrgConfig.orgConfig = JSON.parse(
-      fs.readFileSync(this.options.configFile, 'utf8')
-    );
+    this.options.scratchOrgConfig.orgConfig = JSON.parse(fs.readFileSync(this.options.configFile, 'utf8'));
   }
 
   public async verifyPackageKey(): Promise<void> {
