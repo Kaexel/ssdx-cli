@@ -13,7 +13,11 @@ interface SfdxConfig {
   defaultusername?: string;
 }
 
-export async function openConfig(): Promise<SfConfig> {
+/* -------------------------------------------------------------------------- */
+/*                                Config Files                                */
+/* -------------------------------------------------------------------------- */
+
+export async function openSfConfig(): Promise<SfConfig> {
   try {
     await fs.access('.sf/config.json');
     const content = await fs.readFile('.sf/config.json', 'utf8');
@@ -33,18 +37,51 @@ export async function openSfdxConfig(): Promise<SfdxConfig> {
   }
 }
 
-/* ------------------------------- scratch org ------------------------------ */
+export async function writeSfConfig(config: SfConfig): Promise<void> {
+  try {
+    await fs.mkdir('.sf', { recursive: true });
+    await fs.writeFile('.sf/config.json', JSON.stringify(config, null, 2), 'utf8');
+  } catch (error) {
+    throwError(`Failed to write sf config file: ${String(error)}`);
+  }
+}
+
+export async function writeSfdxConfig(config: SfdxConfig): Promise<void> {
+  try {
+    await fs.mkdir('.sfdx', { recursive: true });
+    await fs.writeFile('.sfdx/sfdx-config.json', JSON.stringify(config, null, 2), 'utf8');
+  } catch (error) {
+    throwError(`Failed to write sfdx config file: ${String(error)}`);
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                 Scratch Org                                */
+/* -------------------------------------------------------------------------- */
 
 export async function getCurrentScratchOrg(): Promise<Org | undefined> {
   const alias = await getCurrentScratchOrgAlias();
   return await getOrg(alias);
 }
+
 export async function getCurrentScratchOrgAlias(): Promise<string | undefined> {
-  const config = await openConfig();
+  const config = await openSfConfig();
   return config['target-org'];
 }
 
-/* --------------------------------- devhub --------------------------------- */
+export async function setCurrentScratchOrg(alias: string): Promise<void> {
+  const sfConfig = await openSfConfig();
+  sfConfig['target-org'] = alias;
+  await writeSfConfig(sfConfig);
+
+  const sfdxConfig = await openSfdxConfig();
+  sfdxConfig['defaultusername'] = alias;
+  await writeSfdxConfig(sfdxConfig);
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                   DevHub                                   */
+/* -------------------------------------------------------------------------- */
 
 export async function getDevHub(options: CreateOptions): Promise<Org> {
   const alias = options.targetDevHub || (await getCurrentDevHubAlias());
@@ -61,16 +98,24 @@ export async function getDevHub(options: CreateOptions): Promise<Org> {
   return org;
 }
 
-export async function getCurrentDevHubAlias(): Promise<string> {
-  const config = await openConfig();
-  const devHub = config['target-dev-hub'];
-  if (!devHub) {
-    throwError('No default DevHub found. Please authenticate one.');
-  }
-  return devHub;
+export async function getCurrentDevHubAlias(): Promise<string | undefined> {
+  const config = await openSfConfig();
+  return config['target-dev-hub'];
 }
 
-/* --------------------------------- shared --------------------------------- */
+export async function setDevHub(alias: string): Promise<void> {
+  const sfConfig = await openSfConfig();
+  sfConfig['target-dev-hub'] = alias;
+  await writeSfConfig(sfConfig);
+
+  const sfdxConfig = await openSfdxConfig();
+  sfdxConfig['defaultdevhubusername'] = alias;
+  await writeSfdxConfig(sfdxConfig);
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                   Shared                                   */
+/* -------------------------------------------------------------------------- */
 
 export async function getOrg(alias?: string): Promise<Org | undefined> {
   try {

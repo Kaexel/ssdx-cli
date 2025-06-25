@@ -8,14 +8,14 @@ import CreateOptions from '../dto/create-options.dto.js';
 import { chooseDevhub } from './devhub.js';
 import { Org } from '@salesforce/core';
 import { makeDirectory } from 'make-dir';
-import ora from 'ora';
 import * as ssdx from 'lib/config/ssdx-config.js';
 import { getCurrentDevHubAlias } from 'lib/config/sf-config.js';
 
 const CONFIG_FOLDER_PATH = './config/';
 
 export async function initialize(options: CreateOptions): Promise<void> {
-  print.header('SSDX CLI');
+  print.subheader('Create Scratch Org');
+
   const init = new initializer(options);
   init.setScratchOrgConfig();
   init.setSsdxConfig();
@@ -105,16 +105,8 @@ class initializer {
   }
 
   public async getDevhub(): Promise<void> {
-    const spinner = ora('Fetching DevHub info').start(); // TODO: print the devhub used
     if (this.options.targetDevHub) return;
-    this.options.targetDevHub = await getCurrentDevHubAlias();
-
-    if (this.options.targetDevHub) {
-      spinner.succeed();
-    } else {
-      spinner.fail('No default DevHub found.');
-      this.options.targetDevHub = await chooseDevhub();
-    }
+    this.options.targetDevHub = (await getCurrentDevHubAlias()) || (await chooseDevhub());
   }
 
   public async setDevhub(): Promise<void> {

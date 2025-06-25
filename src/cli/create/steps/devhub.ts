@@ -1,8 +1,8 @@
 import { OrgList } from '../dto/orgs.dto.js';
-import { execSync } from 'node:child_process';
 import select from '@inquirer/select';
 import colors from 'colors/safe.js';
 import { runCmd } from 'lib/command-helper.js';
+import { setDevHub } from 'lib/config/sf-config.js';
 
 export async function chooseDevhub(): Promise<string> {
   const devHubOptions: { name: string; value: string }[] = await getDevhubOptions();
@@ -12,7 +12,7 @@ export async function chooseDevhub(): Promise<string> {
     choices: devHubOptions,
   });
 
-  setDefaultDevhub(devHub);
+  await setDevHub(devHub);
 
   return devHub;
 }
@@ -35,8 +35,4 @@ async function getDevhubOptions(): Promise<devHubOption[]> {
     });
   }
   return devHubOptions;
-}
-
-export function setDefaultDevhub(devhub: string): void {
-  execSync('sf config:set target-dev-hub=' + devhub);
 }
