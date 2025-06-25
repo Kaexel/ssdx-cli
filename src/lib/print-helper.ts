@@ -42,29 +42,29 @@ export function subheader(
   info(text, false);
 }
 
-export function info(text: string, log: boolean = true, notification: boolean = false): void {
+export function info(text: string, output: boolean = true, log: boolean = true, notification: boolean = false): void {
   if (log) logger.info(text);
   if (notification) void Notification.showInfo(text);
-  console.log(text);
+  if (output) console.log(text);
 }
-export function success(text: string, log: boolean = true, notification: boolean = true): void {
+export function success(text: string, output: boolean = true, log: boolean = true, notification: boolean = true): void {
   if (log) logger.info(text);
   if (notification) void Notification.showSuccess(text);
-  console.log(text);
+  if (output) console.log(text);
 }
-export function warning(text: string, log: boolean = true, notification: boolean = true): void {
+export function warning(text: string, output: boolean = true, log: boolean = true, notification: boolean = true): void {
   if (log) logger.warn(text);
   if (notification) void Notification.showWarning(text);
-  console.log(colors.yellow(text));
+  if (output) console.log(colors.yellow(text));
 }
-export function error(text: string, log: boolean = true, notification: boolean = true): void {
+export function error(text: string, output: boolean = true, log: boolean = true, notification: boolean = true): void {
   if (log) logger.error(text);
   if (notification) void Notification.showError(text);
-  console.log(colors.bold(colors.red(text)));
+  if (output) console.log(colors.bold(colors.red(text)));
 }
-export function code(text: string, log: boolean = true): void {
+export function code(text: string, output: boolean = true, log: boolean = true): void {
   if (log) logger.info(text);
-  console.log(colors.bgGreen(colors.black(text)));
+  if (output) console.log(colors.bgGreen(colors.black(text)));
 }
 export function printSeparator(): void {
   info(getSeparator(), false);
