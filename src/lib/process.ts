@@ -1,7 +1,10 @@
-export function handleProcessSignals(spinner?: { fail: (message: string) => void }) {
+import { Ora } from 'ora';
+
+export function handleProcessSignals(spinner?: Ora) {
   const handleSignal = () => {
     if (spinner) {
-      spinner.fail('Operation cancelled by user');
+      spinner.suffixText = '[ABORTED BY USER]';
+      spinner.fail();
     }
     process.exit(0);
   };
