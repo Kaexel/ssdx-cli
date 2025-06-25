@@ -1,15 +1,6 @@
 {
   "branchNameLinter": {
-    "prefixes": [
-      "breaking",
-      "feature",
-      "fix",
-      "refactor",
-      "ci",
-      "dependabot",
-      "test",
-      "docs"
-    ],
+    "prefixes": ["breaking", "feature", "fix", "refactor", "ci", "dependabot", "test", "docs"],
     "suggestions": {
       "features": "feature",
       "feat": "feature",

@@ -30,14 +30,7 @@ class Metadata {
     // TODO: move to new metadata class
     await run({
       cmd: 'sf project:deploy:start',
-      args: [
-        '--wait',
-        '30',
-        '--target-org',
-        this.alias,
-        '--ignore-conflicts',
-        '--concise',
-      ],
+      args: ['--wait', '30', '--target-org', this.alias, '--ignore-conflicts', '--concise'],
       outputType: OutputType.OutputLive,
     });
 

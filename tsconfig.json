@@ -1,5 +1,4 @@
 {
-
   "include": ["./src/**/*.ts", "./src/**/*.d.ts"],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig to read more about this file */
@@ -36,9 +35,7 @@
       "node_modules/@types",
       "src/types"
     ] /* Specify multiple folders that act like './node_modules/@types'. */,
-    "types": [
-      "node"
-    ] /* Specify type package names to be included without being referenced in a source file. */,
+    "types": ["node"] /* Specify type package names to be included without being referenced in a source file. */,
     // "allowUmdGlobalAccess": true,                     /* Allow accessing UMD globals from modules. */
     // "moduleSuffixes": [],                             /* List of file name suffixes to search when resolving a module. */
     // "resolveJsonModule": true,                        /* Enable importing .json files. */

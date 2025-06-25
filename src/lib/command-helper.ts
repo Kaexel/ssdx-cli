@@ -58,19 +58,13 @@ export class Command {
     return this.typeIs(OutputType.OutputLiveWithHeader);
   }
   get showSpinner(): boolean {
-    return (
-      this.typeIs(OutputType.Spinner) ||
-      this.typeIs(OutputType.SpinnerAndOutput)
-    );
+    return this.typeIs(OutputType.Spinner) || this.typeIs(OutputType.SpinnerAndOutput);
   }
   get showInitialSeparator(): boolean {
     return this.typeIs(OutputType.OutputLiveWithHeader);
   }
   get showEndSeparator(): boolean {
-    return (
-      this.typeIs(OutputType.OutputEnd) ||
-      this.typeIs(OutputType.SpinnerAndOutput)
-    );
+    return this.typeIs(OutputType.OutputEnd) || this.typeIs(OutputType.SpinnerAndOutput);
   }
   // TODO: implement retry
   private get retryOnFailure(): boolean {
@@ -100,10 +94,7 @@ export class Command {
     );
   }
   get liveOutput(): boolean {
-    return (
-      this.typeIs(OutputType.OutputLive) ||
-      this.typeIs(OutputType.OutputLiveWithHeader)
-    );
+    return this.typeIs(OutputType.OutputLive) || this.typeIs(OutputType.OutputLiveWithHeader);
   }
   get customPipeOutput(): boolean {
     return this.typeIs(OutputType.OutputLiveAndClear);
@@ -250,10 +241,7 @@ function clearNLines(N: number): void {
 
 // TODO: move to new method
 
-export async function runCmd(
-  cmd: string,
-  args: string[] = []
-): Promise<string> {
+export async function runCmd(cmd: string, args: string[] = []): Promise<string> {
   const output = await spawn(cmd, args, {
     shell: true,
     encoding: 'utf8',

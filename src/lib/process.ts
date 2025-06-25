@@ -1,6 +1,4 @@
-export function handleProcessSignals(spinner?: {
-  fail: (message: string) => void;
-}) {
+export function handleProcessSignals(spinner?: { fail: (message: string) => void }) {
   const handleSignal = () => {
     if (spinner) {
       spinner.fail('Operation cancelled by user');
