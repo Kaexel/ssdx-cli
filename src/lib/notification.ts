@@ -17,7 +17,7 @@ export interface NotificationOptions {
 
 export class Notification {
   private static getIcon(): string {
-    return join(__dirname, 'assets', 'astro.png');
+    return join(__dirname, 'assets', 'salesforce.png');
   }
 
   static async show(options: NotificationOptions): Promise<void> {
@@ -26,7 +26,8 @@ export class Notification {
         {
           title: `[SSDX] ${options.title}`,
           message: options.message,
-          icon: this.getIcon(),
+          icon: undefined,
+          contentImage: this.getIcon(),
           sound: options.sound ?? false,
           wait: options.wait ?? false,
         },
