@@ -1,3 +1,4 @@
+import colors from 'colors/safe.js';
 import ora, { Ora } from 'ora';
 import CreateOptions from '../dto/create-options.dto.js';
 import { ScratchOrgCreateOptions, scratchOrgCreate, Org } from '@salesforce/core';
@@ -24,7 +25,7 @@ class create_org {
   }
 
   public init(): void {
-    this.spinner = ora('Creating Scratch Org').start();
+    this.spinner = ora('Creating Scratch Org ...').start();
     handleProcessSignals(this.spinner);
   }
 
@@ -52,7 +53,7 @@ class create_org {
     try {
       this.options.scratchOrgResult = await scratchOrgCreate(this.scratchOrgOptions);
 
-      this.spinner.suffixText = `(successfully created org ${this.options.scratchOrgResult.username})`;
+      this.spinner.suffixText = `done! (${colors.yellow(this.options.scratchOrgResult.username || '')})`;
       this.spinner.succeed();
     } catch (error) {
       this.spinner.fail('Failed to create Scratch Org');

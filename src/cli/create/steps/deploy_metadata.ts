@@ -34,7 +34,6 @@ class Metadata {
       outputType: OutputType.OutputLive,
     });
 
-    console.log('');
     const spinner = ora('Deployed Metadata Successfully').start();
     spinner.succeed();
   }
