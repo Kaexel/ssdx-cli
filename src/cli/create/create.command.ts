@@ -20,23 +20,10 @@ export default class CreateCommand {
     this.program
       .command('create')
       .description('Create a Scratch org')
-      .option(
-        '-n, --scratch-org-name <string>',
-        'The alias to give the Scratch Org'
-      )
-      .option(
-        '-d, --duration-days <number>',
-        'The amount of days to keep the Scratch Org',
-        '5'
-      )
-      .option(
-        '-c, --config-file <string>',
-        'The Scratch Org config file (see ssdx-config.json for default value)'
-      )
-      .option(
-        '-v, --target-dev-hub <string>',
-        'The alias or username of the dev hub org'
-      )
+      .option('-n, --scratch-org-name <string>', 'The alias to give the Scratch Org')
+      .option('-d, --duration-days <number>', 'The amount of days to keep the Scratch Org', '5')
+      .option('-c, --config-file <string>', 'The Scratch Org config file (see ssdx-config.json for default value)')
+      .option('-v, --target-dev-hub <string>', 'The alias or username of the dev hub org')
       .option('--skip-dependencies', 'Skip dependency installation')
       .option('--skip-deployment', 'Skip deployment step')
       .action((options: CreateOptions) => {
@@ -52,9 +39,7 @@ export default class CreateCommand {
     await createScratchOrg(this.options);
 
     // assigner slots
-    const { preDependencies, preDeploy, postDeploy } = getSlotOptions(
-      this.options.scratchOrgName
-    );
+    const { preDependencies, preDeploy, postDeploy } = getSlotOptions(this.options.scratchOrgName);
 
     // dependency install
     await resourceAssignmentManager(preDependencies);

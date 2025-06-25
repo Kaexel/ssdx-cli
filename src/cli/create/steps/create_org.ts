@@ -1,10 +1,6 @@
 import ora, { Ora } from 'ora';
 import CreateOptions from '../dto/create-options.dto.js';
-import {
-  ScratchOrgCreateOptions,
-  scratchOrgCreate,
-  Org,
-} from '@salesforce/core';
+import { ScratchOrgCreateOptions, scratchOrgCreate, Org } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
 import { handleProcessSignals } from 'lib/process.js';
 import { getDevHub, readOrgDefinition } from 'lib/config/sf-config.js';
@@ -54,9 +50,7 @@ class create_org {
 
   public async createScratchOrg(): Promise<void> {
     try {
-      this.options.scratchOrgResult = await scratchOrgCreate(
-        this.scratchOrgOptions
-      );
+      this.options.scratchOrgResult = await scratchOrgCreate(this.scratchOrgOptions);
 
       this.spinner.suffixText = `(successfully created org ${this.options.scratchOrgResult.username})`;
       this.spinner.succeed();

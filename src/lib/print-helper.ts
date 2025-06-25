@@ -1,10 +1,5 @@
 import colors from 'colors/safe.js';
-import {
-  Color,
-  frame,
-  getFrameOptions,
-  setColors,
-} from './print-helper/print-helper-formatter.js';
+import { Color, frame, getFrameOptions, setColors } from './print-helper/print-helper-formatter.js';
 import { logger } from './log.js';
 import pad from 'pad';
 

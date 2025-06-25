@@ -31,9 +31,7 @@ export async function getDefaultOrg(): Promise<string> {
 }
 
 export async function getDefaultDevhub(): Promise<string> {
-  const devhubUsernameOutput = await runCmd(
-    'sf config:get target-dev-hub --json'
-  );
+  const devhubUsernameOutput = await runCmd('sf config:get target-dev-hub --json');
   const result: Config = JSON.parse(devhubUsernameOutput);
   const devHub = result.result[0].value;
 
@@ -41,8 +39,7 @@ export async function getDefaultDevhub(): Promise<string> {
 }
 
 export async function chooseDevhub(): Promise<string> {
-  const devHubOptions: { name: string; value: string }[] =
-    await getDevhubOptions();
+  const devHubOptions: { name: string; value: string }[] = await getDevhubOptions();
 
   const devHub = await select({
     message: 'Choose DevHub:',

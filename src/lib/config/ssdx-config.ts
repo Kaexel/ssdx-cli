@@ -1,7 +1,4 @@
-import {
-  SlotOption,
-  TestLevel,
-} from 'cli/resource-assignment-manager/dto/resource-config.dto.js';
+import { SlotOption, TestLevel } from 'cli/resource-assignment-manager/dto/resource-config.dto.js';
 import { Resource, ResourceType, ssdxConfig } from 'dto/ssdx-config.dto.js';
 import fs from 'fs';
 import { logger } from 'lib/log.js';
@@ -27,9 +24,7 @@ export class SSDX {
   }
 
   private getFile(): string {
-    return fs.existsSync('ssdx-config.json')
-      ? fs.readFileSync('ssdx-config.json', 'utf8')
-      : '{}';
+    return fs.existsSync('ssdx-config.json') ? fs.readFileSync('ssdx-config.json', 'utf8') : '{}';
   }
 
   private setConfig() {
@@ -121,9 +116,7 @@ export class SSDX {
           ];
           break;
         default:
-          logger.error(
-            `ERROR: Unsupported resource type: ${resource.type as string}`
-          );
+          logger.error(`ERROR: Unsupported resource type: ${resource.type as string}`);
           resource.skip = true;
           break;
       }
