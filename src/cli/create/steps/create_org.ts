@@ -59,7 +59,7 @@ class create_org {
     this.options.scratchOrgResult = { username: this.options.scratchOrgName } as ScratchOrgCreateResult;
     this.spinner.suffixText = `done! (kept ${colors.yellow(this.options.scratchOrgResult.username || '')})`;
     this.spinner.succeed();
-    print.success(`Scratch Org created successfully with alias: ${colors.yellow(this.options.scratchOrgName)}`);
+    print.success(`Scratch Org created successfully with alias: ${this.options.scratchOrgName}`);
   }
 
   public async createScratchOrg(): Promise<void> {
@@ -68,7 +68,7 @@ class create_org {
 
       this.spinner.suffixText = `done! (${colors.yellow(this.options.scratchOrgResult.username || '')})`;
       this.spinner.succeed();
-      print.success(`Scratch Org created successfully with alias: ${colors.yellow(this.options.scratchOrgName)}`);
+      print.success(`Scratch Org created successfully with alias: ${this.options.scratchOrgName}`);
     } catch (error) {
       this.spinner.fail('Failed to create Scratch Org');
       console.error(error);
