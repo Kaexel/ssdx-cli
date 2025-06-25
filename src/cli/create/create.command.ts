@@ -1,4 +1,3 @@
-import * as print from 'lib/print-helper.js';
 import { Command } from 'commander';
 import CreateOptions from './dto/create-options.dto.js';
 import { createScratchOrg } from './steps/create_org.js';
@@ -32,8 +31,6 @@ export default class CreateCommand {
       });
   }
   private async main() {
-    print.subheader('Create Scratch Org');
-
     await initialize(this.options);
     await delete_question(this.options);
     await createScratchOrg(this.options);

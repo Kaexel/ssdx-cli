@@ -1,3 +1,4 @@
+import * as print from 'lib/print-helper.js';
 import { Command } from 'commander';
 import CreateCommand from './create/create.command.js';
 import { ResourceCommand } from './resource-assignment-manager/resource.command.js';
@@ -15,6 +16,7 @@ export default class cli {
   public run(): void {
     logger.info(`SSDX version: ${VERSION}`);
     logger.info(`Node version: ${process.version}`);
+    print.header('SSDX CLI');
     cli.program
       .name('ssdx-cli')
       .description('Salesforce DX cli helper tool')
