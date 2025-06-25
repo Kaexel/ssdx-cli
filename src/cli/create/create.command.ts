@@ -9,6 +9,7 @@ import { openOrg } from './steps/open_org.js';
 import { getSlotOptions } from 'cli/resource-assignment-manager/dto/resource-config.dto.js';
 import { resourceAssignmentManager } from 'cli/resource-assignment-manager/resource.command.js';
 import { delete_question } from './steps/delete-existing.js';
+import { Notification } from 'lib/notification.js';
 
 export default class CreateCommand {
   options!: CreateOptions;
@@ -41,6 +42,7 @@ export default class CreateCommand {
 
       .action((options: CreateOptions) => {
         this.options = options;
+        Notification.disableNotifications = !!options.disableNotifications;
         void this.main();
       });
   }
