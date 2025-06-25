@@ -6,6 +6,7 @@ import { ScratchOrgCreateOptions, scratchOrgCreate, Org, ScratchOrgCreateResult 
 import { Duration } from '@salesforce/kit';
 import { handleProcessSignals } from 'lib/process.js';
 import { getDevHub, readOrgDefinition } from 'lib/config/sf-config.js';
+import { throwError } from 'lib/log.js';
 
 export async function createScratchOrg(options: CreateOptions): Promise<void> {
   const org = new create_org(options);
@@ -59,7 +60,7 @@ class create_org {
     this.options.scratchOrgResult = { username: this.options.scratchOrgName } as ScratchOrgCreateResult;
     this.spinner.suffixText = `done! (kept ${colors.yellow(this.options.scratchOrgResult.username || '')})`;
     this.spinner.succeed();
-    print.success(`Scratch Org created successfully with alias: ${this.options.scratchOrgName}`);
+    print.success(`Scratch Org created successfully with alias: ${this.options.scratchOrgName}`, false);
   }
 
   public async createScratchOrg(): Promise<void> {
@@ -68,11 +69,10 @@ class create_org {
 
       this.spinner.suffixText = `done! (${colors.yellow(this.options.scratchOrgResult.username || '')})`;
       this.spinner.succeed();
-      print.success(`Scratch Org created successfully with alias: ${this.options.scratchOrgName}`);
+      print.success(`Scratch Org created successfully with alias: ${this.options.scratchOrgName}`, false);
     } catch (error) {
       this.spinner.fail('Failed to create Scratch Org');
-      console.error(error);
-      throw error;
+      throwError(String(error));
     }
   }
 }
