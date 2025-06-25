@@ -1,11 +1,10 @@
-import { OrgList } from '../dto/orgs.dto.js';
 import select from '@inquirer/select';
 import colors from 'colors/safe.js';
-import { runCmd } from 'lib/command-helper.js';
 import { setDevHub } from 'lib/config/sf-config.js';
+import { StateAggregator, Org } from '@salesforce/core';
 
 export async function chooseDevhub(): Promise<string> {
-  const devHubOptions: { name: string; value: string }[] = await getDevhubOptions();
+  const devHubOptions: { name: string; value: string }[] = await getAllDevHubOrgs();
 
   const devHub = await select({
     message: 'Choose DevHub:',
@@ -22,17 +21,28 @@ interface devHubOption {
   value: string;
 }
 
-async function getDevhubOptions(): Promise<devHubOption[]> {
-  const devhubList = await runCmd('sf org:list --json');
-  const devHubListObject = JSON.parse(devhubList) as OrgList;
+export async function getAllDevHubOrgs(): Promise<devHubOption[]> {
+  try {
+    const stateAggregator = await StateAggregator.getInstance();
+    const aliases = stateAggregator.aliases.getAll();
 
-  const devHubOptions: devHubOption[] = [];
+    const devHubOrgs: devHubOption[] = [];
 
-  for (const devHub of devHubListObject.result.devHubs) {
-    devHubOptions.push({
-      name: `${colors.yellow(devHub.alias)} (${devHub.username})`,
-      value: devHub.alias,
-    });
+    for (const alias of Object.keys(aliases)) {
+      const org = await Org.create({ aliasOrUsername: alias });
+
+      if (org.isDevHubOrg()) {
+        devHubOrgs.push({
+          name: `${colors.yellow(alias)} (${org.getUsername()})`,
+          value: alias,
+        });
+      }
+    }
+
+    // If no DevHub orgs found, fallback to the CLI command
+    return devHubOrgs;
+  } catch (error) {
+    console.error('Error fetching DevHub orgs:', error);
+    return [];
   }
-  return devHubOptions;
 }
