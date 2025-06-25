@@ -47,12 +47,22 @@ export function info(text: string, output: boolean = true, log: boolean = true, 
   if (notification) void Notification.showInfo(text);
   if (output) console.log(text);
 }
-export function success(text: string, output: boolean = true, log: boolean = true, notification: boolean = true): void {
+export function success(
+  text: string,
+  output: boolean = true,
+  log: boolean = true,
+  notification: boolean = false
+): void {
   if (log) logger.info(text);
   if (notification) void Notification.showSuccess(text);
   if (output) console.log(text);
 }
-export function warning(text: string, output: boolean = true, log: boolean = true, notification: boolean = true): void {
+export function warning(
+  text: string,
+  output: boolean = true,
+  log: boolean = true,
+  notification: boolean = false
+): void {
   if (log) logger.warn(text);
   if (notification) void Notification.showWarning(text);
   if (output) console.log(colors.yellow(text));
