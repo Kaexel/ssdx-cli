@@ -8,11 +8,26 @@ interface SfConfig {
   'target-org'?: string;
 }
 
+interface SfdxConfig {
+  defaultdevhubusername?: string;
+  defaultusername?: string;
+}
+
 export async function openConfig(): Promise<SfConfig> {
   try {
     await fs.access('.sf/config.json');
     const content = await fs.readFile('.sf/config.json', 'utf8');
     return JSON.parse(content) as SfConfig;
+  } catch {
+    return {};
+  }
+}
+
+export async function openSfdxConfig(): Promise<SfdxConfig> {
+  try {
+    await fs.access('.sfdx/sfdx-config.json');
+    const content = await fs.readFile('.sfdx/sfdx-config.json', 'utf8');
+    return JSON.parse(content) as SfdxConfig;
   } catch {
     return {};
   }
