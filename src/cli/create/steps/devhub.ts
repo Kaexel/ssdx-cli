@@ -2,7 +2,6 @@ import { OrgList } from '../dto/orgs.dto.js';
 import { execSync } from 'node:child_process';
 import select from '@inquirer/select';
 import colors from 'colors/safe.js';
-import { Config } from '../dto/create-config.dto.js';
 import { runCmd } from 'lib/command-helper.js';
 
 // TODO: change to native query method
@@ -22,27 +21,8 @@ async function queryRecord(query) {
 
 */
 
-// TODO: remove
-
-export async function getDefaultOrg(): Promise<string> {
-  const targetOrgOutput = await runCmd('sf config:get target-org --json');
-  const result: Config = JSON.parse(targetOrgOutput);
-  return result.result[0].value;
-}
-
-export async function getDefaultDevhub(): Promise<string> {
-  const devhubUsernameOutput = await runCmd(
-    'sf config:get target-dev-hub --json'
-  );
-  const result: Config = JSON.parse(devhubUsernameOutput);
-  const devHub = result.result[0].value;
-
-  return devHub;
-}
-
 export async function chooseDevhub(): Promise<string> {
-  const devHubOptions: { name: string; value: string }[] =
-    await getDevhubOptions();
+  const devHubOptions: { name: string; value: string }[] = await getDevhubOptions();
 
   const devHub = await select({
     message: 'Choose DevHub:',

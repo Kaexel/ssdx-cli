@@ -5,11 +5,12 @@ import * as print from 'lib/print-helper.js';
 import { input, password } from '@inquirer/prompts';
 import select from '@inquirer/select';
 import CreateOptions from '../dto/create-options.dto.js';
-import { chooseDevhub, getDefaultDevhub } from './devhub.js';
+import { chooseDevhub } from './devhub.js';
 import { Org } from '@salesforce/core';
 import { makeDirectory } from 'make-dir';
 import ora from 'ora';
 import * as ssdx from 'lib/config/ssdx-config.js';
+import { getCurrentDevHubAlias } from 'lib/config/sf-config.js';
 
 const CONFIG_FOLDER_PATH = './config/';
 
@@ -38,13 +39,8 @@ class initializer {
   }
 
   public setScratchOrgConfig(): void {
-    this.options.scratchOrgConfig.durationDays = parseInt(
-      this.options.durationDays
-    );
-    this.options.scratchOrgConfig.wait = new Duration(
-      45,
-      Duration.Unit.MINUTES
-    );
+    this.options.scratchOrgConfig.durationDays = parseInt(this.options.durationDays);
+    this.options.scratchOrgConfig.wait = new Duration(45, Duration.Unit.MINUTES);
     this.options.scratchOrgConfig.setDefault = true;
   }
 
@@ -92,9 +88,7 @@ class initializer {
   }
 
   public setConfig() {
-    this.options.scratchOrgConfig.orgConfig = JSON.parse(
-      fs.readFileSync(this.options.configFile, 'utf8')
-    );
+    this.options.scratchOrgConfig.orgConfig = JSON.parse(fs.readFileSync(this.options.configFile, 'utf8'));
   }
 
   public async verifyPackageKey(): Promise<void> {
@@ -113,7 +107,7 @@ class initializer {
   public async getDevhub(): Promise<void> {
     const spinner = ora('Fetching DevHub info').start(); // TODO: print the devhub used
     if (this.options.targetDevHub) return;
-    this.options.targetDevHub = await getDefaultDevhub();
+    this.options.targetDevHub = await getCurrentDevHubAlias();
 
     if (this.options.targetDevHub) {
       spinner.succeed();
