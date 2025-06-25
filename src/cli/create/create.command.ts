@@ -1,3 +1,4 @@
+import * as print from 'lib/print-helper.js';
 import colors from 'colors/safe.js';
 import { Command } from 'commander';
 import CreateOptions from './dto/create-options.dto.js';
@@ -66,5 +67,11 @@ export default class CreateCommand {
     await clearingTracking(this.options);
 
     await openOrg(this.options);
+
+    print.success(`Scratch Org created successfully (alias: ${this.options.scratchOrgName})`, {
+      output: false,
+      log: true,
+      notification: true,
+    });
   }
 }
