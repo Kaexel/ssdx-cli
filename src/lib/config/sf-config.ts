@@ -37,6 +37,7 @@ export async function openSfdxConfig(): Promise<SfdxConfig> {
   }
 }
 
+// TODO: create static class to add parameter for target org, to avoid passing it is a parameter
 export async function writeSfConfig(config: SfConfig): Promise<void> {
   try {
     await fs.mkdir('.sf', { recursive: true });
