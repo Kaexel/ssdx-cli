@@ -4,7 +4,7 @@ import CreateOptions from '../dto/create-options.dto.js';
 import { Org } from '@salesforce/core';
 import { confirm } from '@inquirer/prompts';
 import { getCurrentScratchOrg, getCurrentScratchOrgAlias } from 'lib/config/sf-config.js';
-import { logger } from 'lib/log.js';
+import { logger, throwError } from 'lib/log.js';
 
 export async function delete_question(options: CreateOptions): Promise<void> {
   const org = new OrgManager(options);
@@ -26,7 +26,7 @@ class OrgManager {
   public async checkIfActiveScratchOrg(): Promise<boolean> {
     this.currentScratchOrg = await getCurrentScratchOrg();
 
-    if (!this.currentScratchOrg || (await this.notScratchOrg())) {
+    if (!this.currentScratchOrg || this.options.keepExistingOrg || (await this.notScratchOrg())) {
       return false;
     }
 
@@ -65,17 +65,15 @@ class OrgManager {
   }
 
   public async deleteOrg(): Promise<void> {
-    this.spinner = ora('Deleting existing scratch org').start();
+    this.spinner = ora('Deleting existing Scratch Org ...').start();
 
     try {
-      // Use the remove method which handles all cleanup
       await this.currentScratchOrg?.delete();
-
-      this.spinner.succeed('Existing scratch org deleted successfully');
+      this.spinner.suffixText = 'done';
+      this.spinner.succeed();
     } catch (error) {
-      this.spinner.fail('Failed to delete scratch org');
-      console.error('Delete error:', error);
-      throw error;
+      this.spinner.fail('Failed to delete Scratch Org');
+      throwError(String(error));
     }
   }
 }

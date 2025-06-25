@@ -2,6 +2,7 @@ import colors from 'colors/safe.js';
 import { Color, frame, getFrameOptions, setColors } from './print-helper/print-helper-formatter.js';
 import { logger } from './log.js';
 import pad from 'pad';
+import { Notification } from './notification.js';
 
 export function header(
   text: string,
@@ -19,7 +20,7 @@ export function header(
   text = frame(frameOptions);
   text = colors.bold(colors.black(text));
   text = setColors(text, [color, bgColor]);
-  info(text, false);
+  info(text, { log: false });
 }
 
 export function subheader(
@@ -38,27 +39,46 @@ export function subheader(
   text = frame(frameOptions);
   text = colors.bold(colors.black(text));
   text = setColors(text, [color, bgColor]);
-  info(text, false);
+  info(text, { log: false });
 }
 
-export function info(text: string, log: boolean = true): void {
-  if (log) logger.info(text);
-  console.log(text);
+export interface PrintOptions {
+  output?: boolean;
+  log?: boolean;
+  notification?: boolean;
 }
-export function warning(text: string, log: boolean = true): void {
+
+export function info(text: string, options: PrintOptions = {}): void {
+  const { output = true, log = true, notification = false } = options;
+  if (log) logger.info(text);
+  if (notification) void Notification.showInfo(text);
+  if (output) console.log(text);
+}
+export function success(text: string, options: PrintOptions = {}): void {
+  const { output = true, log = true, notification = false } = options;
+  if (log) logger.info(text);
+  if (notification) void Notification.showSuccess(text);
+  if (output) console.log(text);
+}
+export function warning(text: string, options: PrintOptions = {}): void {
+  const { output = true, log = true, notification = false } = options;
   if (log) logger.warn(text);
-  console.log(colors.yellow(text));
+  if (notification) void Notification.showWarning(text);
+  if (output) console.log(colors.yellow(text));
 }
-export function error(text: string, log: boolean = true): void {
+export function error(text: string, options: PrintOptions = {}): void {
+  const { output = true, log = true, notification = true } = options;
   if (log) logger.error(text);
-  console.log(colors.bold(colors.red(text)));
+  if (notification) void Notification.showError(text);
+  if (output) console.log(colors.bold(colors.red(text)));
 }
-export function code(text: string, log: boolean = true): void {
+export function code(text: string, options: PrintOptions = {}): void {
+  const { output = true, log = true } = options;
   if (log) logger.info(text);
-  console.log(colors.bgGreen(colors.black(text)));
+  if (output) console.log(colors.bgGreen(colors.black(text)));
 }
 export function printSeparator(): void {
-  info(getSeparator(), false);
+  info(getSeparator(), { log: false });
 }
 export function getSeparator(): string {
   return pad('', process.stdout.columns, '-');

@@ -57,7 +57,6 @@ class Dependencies {
       outputType: OutputType.OutputLiveAndClear,
     });
 
-    console.log('');
     const spinner = ora('Installed Dependencies Successfully').start();
     spinner.succeed();
   }

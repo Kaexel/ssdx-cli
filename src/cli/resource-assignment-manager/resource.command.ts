@@ -1,10 +1,11 @@
 import { Command } from 'commander';
 import { SlotOption } from './dto/resource-config.dto.js';
-import { getDefaultOrg } from 'cli/create/steps/devhub.js';
 import { ResourceAssignmentManager } from './resource-assignment-manager.js';
 import { OutputType, run } from 'lib/command-helper.js';
 import { Color, setColor, setColors } from 'lib/print-helper/print-helper-formatter.js';
 import { Org } from 'cli/create/dto/org.dto.js';
+import { getCurrentScratchOrgAlias } from 'lib/config/sf-config.js';
+import { throwError } from 'lib/log.js';
 
 const DESCRIPTION = `${setColors('Configurable resource assignment to orgs. This option allows:', [Color.yellow, Color.bold])}
   - Running Apex
@@ -40,8 +41,11 @@ export class ResourceCommand {
 }
 
 export async function resourceAssignmentManager(options: SlotOption) {
-  const targetOrgAlias = options.targetOrg ?? (await getDefaultOrg());
+  const targetOrgAlias = options.targetOrg ?? (await getCurrentScratchOrgAlias());
 
+  if (!targetOrgAlias) {
+    throwError('No target org specified. Please provide a target org alias or username.');
+  }
   // TODO: check if targetOrgAlias is a valid org alias before continuing
 
   const { stdout } = await run({

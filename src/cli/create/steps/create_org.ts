@@ -1,16 +1,24 @@
+import * as print from 'lib/print-helper.js';
+import colors from 'colors/safe.js';
 import ora, { Ora } from 'ora';
 import CreateOptions from '../dto/create-options.dto.js';
-import { ScratchOrgCreateOptions, scratchOrgCreate, Org } from '@salesforce/core';
+import { ScratchOrgCreateOptions, scratchOrgCreate, Org, ScratchOrgCreateResult } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
 import { handleProcessSignals } from 'lib/process.js';
 import { getDevHub, readOrgDefinition } from 'lib/config/sf-config.js';
+import { throwError } from 'lib/log.js';
 
 export async function createScratchOrg(options: CreateOptions): Promise<void> {
   const org = new create_org(options);
   org.init();
   await org.setDevHub();
   await org.setOrgConfig();
-  await org.createScratchOrg();
+
+  if (options.keepExistingOrg) {
+    org.keepScratchOrg();
+  } else {
+    await org.createScratchOrg();
+  }
 }
 
 class create_org {
@@ -24,7 +32,7 @@ class create_org {
   }
 
   public init(): void {
-    this.spinner = ora('Creating Scratch Org').start();
+    this.spinner = ora('Creating Scratch Org ...').start();
     handleProcessSignals(this.spinner);
   }
 
@@ -48,16 +56,29 @@ class create_org {
     };
   }
 
+  public keepScratchOrg(): void {
+    this.options.scratchOrgResult = { username: this.options.scratchOrgName } as ScratchOrgCreateResult;
+    this.spinner.suffixText = `done! (kept ${colors.yellow(this.options.scratchOrgResult.username || '')})`;
+    this.spinner.succeed();
+    print.success(`Scratch Org created successfully with alias: ${this.options.scratchOrgName}`, {
+      output: false,
+      log: true,
+    });
+  }
+
   public async createScratchOrg(): Promise<void> {
     try {
       this.options.scratchOrgResult = await scratchOrgCreate(this.scratchOrgOptions);
 
-      this.spinner.suffixText = `(successfully created org ${this.options.scratchOrgResult.username})`;
+      this.spinner.suffixText = `done! (${colors.yellow(this.options.scratchOrgResult.username || '')})`;
       this.spinner.succeed();
+      print.success(`Scratch Org created successfully with alias: ${this.options.scratchOrgName}`, {
+        output: false,
+        log: true,
+      });
     } catch (error) {
       this.spinner.fail('Failed to create Scratch Org');
-      console.error(error);
-      throw error;
+      throwError(String(error));
     }
   }
 }
