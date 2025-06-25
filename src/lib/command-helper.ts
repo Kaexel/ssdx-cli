@@ -113,7 +113,7 @@ export class Command {
   }
   private printHeader() {
     if (this.showHeader) {
-      print.info(this.spinnerText, false);
+      print.info(this.spinnerText, { log: false });
     }
   }
   private printSeparator() {
@@ -184,8 +184,8 @@ export class Command {
   }
   private printError() {
     if (!this.outputError || this.showSpinner) return;
-    print.error('\nERROR! See message below:\n', false);
-    print.error(this.output.stdout.join('\n') + '\n', false);
+    print.error('\nERROR! See message below:\n', { log: false });
+    print.error(this.output.stdout.join('\n') + '\n', { log: false });
 
     if (this.exitOnError) exit(1);
   }
@@ -203,7 +203,7 @@ export class Command {
   private printOutput() {
     if (this.showEndSeparator) print.printSeparator();
     if (this.endOutput && this.output.code === 0) {
-      print.info(this.output.stdout.join('\n') + '\n', false);
+      print.info(this.output.stdout.join('\n') + '\n', { log: false });
     }
   }
 }
@@ -246,8 +246,8 @@ export async function runCmd(cmd: string, args: string[] = []): Promise<string> 
     shell: true,
     encoding: 'utf8',
   }).catch(error => {
-    print.error('Error running command:', false);
-    print.code(`${cmd} ${args.join(' ')}`, false);
+    print.error('Error running command:', { log: false });
+    print.code(`${cmd} ${args.join(' ')}`, { log: false });
     throw error;
   });
 
