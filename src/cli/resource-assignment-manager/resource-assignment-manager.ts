@@ -1,32 +1,52 @@
 import { OutputType, run } from 'lib/command-helper.js';
 import ora from 'ora';
 import * as print from 'lib/print-helper.js';
-import { SlotOption } from './dto/resource-config.dto.js';
-import { SSDX, fetchConfig } from 'lib/config/ssdx-config.js';
 import { Color, setColor } from 'lib/print-helper/print-helper-formatter.js';
 import pad from 'pad';
 import { Resource, ResourceType } from 'dto/ssdx-config.dto.js';
 import { logger } from 'lib/log.js';
 import { queryRecord } from 'lib/sf-helper.js';
+import ResourceOptions from './dto/resource.dto.js';
+import { SlotType } from 'lib/config/ssdx-config.js';
+
+export async function startResourcePreDependencies(): Promise<void> {
+  await new ResourceAssignmentManager().startResource(SlotType.PRE_DEPENDENCIES);
+}
+
+export async function startResourcePreDeploy(): Promise<void> {
+  await new ResourceAssignmentManager().startResource(SlotType.PRE_DEPLOY);
+}
+
+export async function startResourcePostDeploy(): Promise<void> {
+  await new ResourceAssignmentManager().startResource(SlotType.POST_DEPLOY);
+}
+
+export async function startResourcePostInstall(): Promise<void> {
+  await new ResourceAssignmentManager().startResource(SlotType.POST_INSTALL);
+}
+
+export async function startAllResources(): Promise<void> {
+  await new ResourceAssignmentManager().startAllResources();
+}
 
 export class ResourceAssignmentManager {
-  options: SlotOption;
-  targetOrg: string;
-  ssdxConfig: SSDX = fetchConfig();
+  public async startResource(slotType: SlotType): Promise<void> {
+    // if (!ResourceOptions.ssdxConfig.hasResources()) return; // TODO: enable
 
-  constructor(options: SlotOption, targetOrg: string) {
-    logger.info(options, 'Running ResourceAssignmentManager');
-    this.ssdxConfig.setSlotOption(options);
-    this.options = options;
-    this.targetOrg = targetOrg;
+    print.subheader(slotType + ' Steps', undefined, Color.bgCyan);
+
+    for (const resource of ResourceOptions.ssdxConfig.resource(slotType)) {
+      await this.waitForPermsetGroup(resource);
+      await this.runResource(resource);
+    }
   }
 
-  public async run(): Promise<void> {
-    if (!this.ssdxConfig.hasResources()) return;
+  public async startAllResources(): Promise<void> {
+    if (!ResourceOptions.ssdxConfig.hasResources()) return;
 
-    print.subheader(this.ssdxConfig.resourceTypes.join(', ') + ' Steps', undefined, Color.bgCyan);
+    print.subheader(ResourceOptions.ssdxConfig.resourceTypes.join(', ') + ' Steps', undefined, Color.bgCyan);
 
-    for (const resource of this.ssdxConfig.resources) {
+    for (const resource of ResourceOptions.ssdxConfig.resources) {
       await this.waitForPermsetGroup(resource);
       await this.runResource(resource);
     }
@@ -61,7 +81,7 @@ export class ResourceAssignmentManager {
   private async checkPermsetStatus(resource: Resource) {
     return await queryRecord(
       `SELECT Count() FROM PermissionSetGroup WHERE DeveloperName = '${resource.value}' AND Status = 'Updated'`,
-      this.targetOrg
+      ResourceOptions.targetOrg
     );
   }
 
@@ -91,12 +111,12 @@ export class ResourceAssignmentManager {
     }
 
     // always add the target-org value to the args (if not skipping). JS scripts will be added without name, and SF commands will have the value with --target-org before
-    resource.args.push(this.targetOrg);
+    resource.args.push(ResourceOptions.targetOrg);
   }
 
   private getOutputType(resource: Resource): OutputType {
-    if (this.options.ci) return OutputType.OutputLiveWithHeader;
-    if (this.options.showOutput || resource.print_output) return OutputType.SpinnerAndOutput;
+    if (ResourceOptions.ci) return OutputType.OutputLiveWithHeader;
+    if (ResourceOptions.showOutput || resource.print_output) return OutputType.SpinnerAndOutput;
     return OutputType.Spinner;
   }
 

@@ -7,10 +7,13 @@ import { installDependencies } from './steps/dependencies.js';
 import { initialize } from './steps/initializer.js';
 import { clearingTracking, deployMetadata } from './steps/deploy_metadata.js';
 import { openOrg } from './steps/open_org.js';
-import { getSlotOptions } from 'cli/resource-assignment-manager/dto/resource-config.dto.js';
-import { resourceAssignmentManager } from 'cli/resource-assignment-manager/resource.command.js';
 import { delete_question } from './steps/delete-existing.js';
 import { Notification } from 'lib/notification.js';
+import {
+  startResourcePostDeploy,
+  startResourcePreDependencies,
+  startResourcePreDeploy,
+} from 'cli/resource-assignment-manager/resource-assignment-manager.js';
 
 export default class CreateCommand {
   program: Command;
@@ -53,17 +56,14 @@ export default class CreateCommand {
     await delete_question();
     await createScratchOrg();
 
-    // assigner slots
-    const { preDependencies, preDeploy, postDeploy } = getSlotOptions(CreateOptions.scratchOrgName);
-
     // dependency install
-    await resourceAssignmentManager(preDependencies);
+    await startResourcePreDependencies();
     await installDependencies();
 
     // deployment
-    await resourceAssignmentManager(preDeploy);
+    await startResourcePreDeploy();
     await deployMetadata();
-    await resourceAssignmentManager(postDeploy);
+    await startResourcePostDeploy();
     await clearingTracking();
 
     await openOrg();

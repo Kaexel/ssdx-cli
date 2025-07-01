@@ -5,13 +5,20 @@ import { logger } from 'lib/log.js';
 import * as print from 'lib/print-helper.js';
 import { exit } from 'process';
 
+export enum SlotType {
+  PRE_DEPENDENCIES = 'pre_dependencies',
+  PRE_DEPLOY = 'pre_deploy',
+  POST_DEPLOY = 'post_deploy',
+  POST_INSTALL = 'post_install',
+}
+
 export function fetchConfig(): SSDX {
   return new SSDX();
 }
 
 export class SSDX {
   config: ssdxConfig = {} as ssdxConfig;
-  slotOption?: SlotOption;
+  slotOption?: SlotOption; // TODO: remove
 
   constructor() {
     this.setConfig();
@@ -36,6 +43,23 @@ export class SSDX {
       );
       logger.error(error);
       exit(1);
+    }
+  }
+
+  // gets all resouces if no slot is added, or one (or more) if slots are added
+  public resource(slotOption: SlotType): Resource[] {
+    switch (slotOption) {
+      case SlotType.PRE_DEPENDENCIES:
+        return this.isPreDependencies ? (this.config.pre_dependencies ?? []) : [];
+      case SlotType.PRE_DEPLOY:
+        return this.isPreDeploy ? (this.config.pre_deploy ?? []) : [];
+      case SlotType.POST_DEPLOY:
+        return this.isPostDeploy ? (this.config.post_deploy ?? []) : [];
+      case SlotType.POST_INSTALL:
+        return this.isPostInstall ? (this.config.post_install ?? []) : [];
+      default:
+        logger.error(`ERROR: Unsupported slot type: ${slotOption as string}`);
+        return [];
     }
   }
 
