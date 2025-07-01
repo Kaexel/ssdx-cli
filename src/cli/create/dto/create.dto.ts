@@ -1,3 +1,4 @@
+import { logger } from 'lib/log.js';
 import { ScratchOrgCreateOptions, ScratchOrgCreateResult } from '@salesforce/core';
 import BaseOptions from 'dto/base.dto.js';
 
@@ -37,5 +38,6 @@ export default class CreateOptions extends BaseOptions {
     CreateOptions.skipPermsetAssignment = options.skipPermsetAssignment;
 
     CreateOptions.keepExistingOrg = options.keepExistingOrg;
+    logger.info(options, 'Running setFields in CreateOptions');
   }
 }
