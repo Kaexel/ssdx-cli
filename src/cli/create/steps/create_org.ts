@@ -1,7 +1,7 @@
 import * as print from 'lib/print-helper.js';
 import colors from 'colors/safe.js';
 import ora, { Ora } from 'ora';
-import CreateOptions from '../dto/create-options.dto.js';
+import CreateOptions from '../dto/create.dto.js';
 import { ScratchOrgCreateOptions, scratchOrgCreate, Org, ScratchOrgCreateResult } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
 import { handleProcessSignals } from 'lib/process.js';

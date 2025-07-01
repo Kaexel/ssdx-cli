@@ -1,4 +1,4 @@
-import CreateOptions from 'cli/create/dto/create-options.dto.js';
+import CreateOptions from 'cli/create/dto/create.dto.js';
 import { promises as fs } from 'fs';
 import { Org } from '@salesforce/core';
 import { logger, throwError } from 'lib/log.js';
