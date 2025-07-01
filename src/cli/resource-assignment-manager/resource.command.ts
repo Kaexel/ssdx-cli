@@ -26,16 +26,25 @@ export class ResourceCommand {
     this.program
       .command('resource')
       .description(DESCRIPTION)
+
+      .optionsGroup('Parameters')
       .option('-o --target-org <string>', 'The org to run the scripts on')
+      .option('-l --test-level <string>', 'For metadata operation, choose the test level', 'NoTestRun')
+
+      .optionsGroup('Resource Types')
       .option('--pre-dependencies', 'Runs "pre_dependencies" resources', false)
       .option('--pre-deploy', 'Runs "pre_deploy" resources', false)
       .option('--post-deploy', 'Runs "post_deploy" resources', false)
       .option('--post-install', 'Runs "post_install" resources', false)
+
+      .optionsGroup('Outout')
+      .option('--disable-notifications', 'Disabled OS notifications for steps')
       .option('--show-output', 'Show output of resource assignments', false)
-      .option('-l --test-level <string>', 'For metadata operation, choose the test level', 'NoTestRun')
       .option('--ci', 'Disables fancy feature for a slimmer output', false)
-      .action((options: SlotOption) => {
-        void resourceAssignmentManager(options);
+
+      .action((options: typeof ResourceOptions) => {
+        ResourceOptions.setFields(options);
+        void resourceAssignmentManager();
       });
   }
 }
