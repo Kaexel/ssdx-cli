@@ -1,5 +1,5 @@
 import { ScratchOrgCreateOptions, ScratchOrgCreateResult } from '@salesforce/core';
-import BaseOptions from 'dto/base-options.dto.js';
+import BaseOptions from 'dto/base.dto.js';
 
 //  TODO: convert to object with properties and methods, such as setAlias, chooseConfig, verifyPackageKey, findDevhub, setDevhub, setScratchOrgConfig
 export default class CreateOptions extends BaseOptions {
