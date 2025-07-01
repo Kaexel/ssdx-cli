@@ -13,7 +13,6 @@ import { delete_question } from './steps/delete-existing.js';
 import { Notification } from 'lib/notification.js';
 
 export default class CreateCommand {
-  options!: CreateOptions;
   program: Command;
 
   constructor(program: Command) {
@@ -41,34 +40,35 @@ export default class CreateCommand {
       .optionsGroup('Debug')
       .option('--keep-existing-org', 'Keep the existing Scratch Org')
 
-      .action((options: CreateOptions) => {
-        this.options = options;
-        Notification.disableNotifications = !!options.disableNotifications;
+      .action((options: typeof CreateOptions) => {
+        CreateOptions.setFields(options);
+
+        Notification.disableNotifications = !!CreateOptions.disableNotifications;
         void this.main();
       });
   }
 
   private async main() {
-    await initialize(this.options);
-    await delete_question(this.options);
-    await createScratchOrg(this.options);
+    await initialize();
+    await delete_question();
+    await createScratchOrg();
 
     // assigner slots
-    const { preDependencies, preDeploy, postDeploy } = getSlotOptions(this.options.scratchOrgName);
+    const { preDependencies, preDeploy, postDeploy } = getSlotOptions(CreateOptions.scratchOrgName);
 
     // dependency install
     await resourceAssignmentManager(preDependencies);
-    await installDependencies(this.options);
+    await installDependencies();
 
     // deployment
     await resourceAssignmentManager(preDeploy);
-    await deployMetadata(this.options);
+    await deployMetadata();
     await resourceAssignmentManager(postDeploy);
-    await clearingTracking(this.options);
+    await clearingTracking();
 
-    await openOrg(this.options);
+    await openOrg();
 
-    print.success(`Scratch Org created successfully (alias: ${this.options.scratchOrgName})`, {
+    print.success(`Scratch Org created successfully (alias: ${CreateOptions.scratchOrgName})`, {
       output: false,
       log: true,
       notification: true,

@@ -13,14 +13,13 @@ import { getCurrentDevHubAlias } from 'lib/config/sf-config.js';
 
 const CONFIG_FOLDER_PATH = './config/';
 
-export async function initialize(options: CreateOptions): Promise<void> {
+export async function initialize(): Promise<void> {
   print.subheader('Create Scratch Org');
 
-  const init = new initializer(options);
+  const init = new initializer();
   init.setScratchOrgConfig();
   init.setSsdxConfig();
   await init.setAlias();
-  // TODO: ask to delete previous
   await init.chooseConfig();
   init.setConfig();
   await init.verifyPackageKey();
@@ -31,39 +30,38 @@ export async function initialize(options: CreateOptions): Promise<void> {
 class initializer {
   options!: CreateOptions;
 
-  constructor(options: CreateOptions) {
-    this.options = options;
-    this.options.scratchOrgConfig = {
+  constructor() {
+    CreateOptions.scratchOrgConfig = {
       hubOrg: {} as Org,
     };
   }
 
   public setScratchOrgConfig(): void {
-    this.options.scratchOrgConfig.durationDays = parseInt(this.options.durationDays);
-    this.options.scratchOrgConfig.wait = new Duration(45, Duration.Unit.MINUTES);
-    this.options.scratchOrgConfig.setDefault = true;
+    CreateOptions.scratchOrgConfig.durationDays = parseInt(CreateOptions.durationDays);
+    CreateOptions.scratchOrgConfig.wait = new Duration(45, Duration.Unit.MINUTES);
+    CreateOptions.scratchOrgConfig.setDefault = true;
   }
 
   public setSsdxConfig(): void {
-    this.options.ssdxConfig = ssdx.fetchConfig();
+    CreateOptions.ssdxConfig = ssdx.fetchConfig();
   }
 
   // TODO: send inn mange Questions til prompt, for å få spørsmålene samlet
   // TODO: legg på validate-metoden på Question
   public async setAlias(): Promise<void> {
-    this.options.scratchOrgName =
-      this.options.scratchOrgName === undefined
+    CreateOptions.scratchOrgName =
+      CreateOptions.scratchOrgName === undefined
         ? await input({ message: 'Enter Scratch Org name:' }) // TODO: validate input (no spaces)
-        : this.options.scratchOrgName;
+        : CreateOptions.scratchOrgName;
 
-    this.options.scratchOrgConfig.alias = this.options.scratchOrgName;
+    CreateOptions.scratchOrgConfig.alias = CreateOptions.scratchOrgName;
   }
 
   public async chooseConfig() {
-    if (this.options.configFile) {
+    if (CreateOptions.configFile) {
       return;
-    } else if (this.options.ssdxConfig.config.default_config) {
-      this.options.configFile = this.options.ssdxConfig.config.default_config;
+    } else if (CreateOptions.ssdxConfig.config.default_config) {
+      CreateOptions.configFile = CreateOptions.ssdxConfig.config.default_config;
     } else {
       await this.configDecision();
     }
@@ -84,34 +82,34 @@ class initializer {
       choices: options,
     });
 
-    this.options.configFile = path.join(CONFIG_FOLDER_PATH, answer);
+    CreateOptions.configFile = path.join(CONFIG_FOLDER_PATH, answer);
   }
 
   public setConfig() {
-    this.options.scratchOrgConfig.orgConfig = JSON.parse(fs.readFileSync(this.options.configFile, 'utf8'));
+    CreateOptions.scratchOrgConfig.orgConfig = JSON.parse(fs.readFileSync(CreateOptions.configFile, 'utf8'));
   }
 
   public async verifyPackageKey(): Promise<void> {
     await makeDirectory('.sf');
     const packageKeyPath = './.sf/package.key';
     if (fs.existsSync(packageKeyPath)) {
-      this.options.packageKey = fs.readFileSync(packageKeyPath, 'utf8');
+      CreateOptions.packageKey = fs.readFileSync(packageKeyPath, 'utf8');
     } else {
-      this.options.packageKey = await password({
+      CreateOptions.packageKey = await password({
         message: 'Enter package key:',
       });
-      fs.writeFileSync(packageKeyPath, this.options.packageKey);
+      fs.writeFileSync(packageKeyPath, CreateOptions.packageKey);
     }
   }
 
   public async getDevhub(): Promise<void> {
-    if (this.options.targetDevHub) return;
-    this.options.targetDevHub = (await getCurrentDevHubAlias()) || (await chooseDevhub());
+    if (CreateOptions.targetDevHub) return;
+    CreateOptions.targetDevHub = (await getCurrentDevHubAlias()) || (await chooseDevhub());
   }
 
   public async setDevhub(): Promise<void> {
-    this.options.scratchOrgConfig.hubOrg = await Org.create({
-      aliasOrUsername: this.options.targetDevHub,
+    CreateOptions.scratchOrgConfig.hubOrg = await Org.create({
+      aliasOrUsername: CreateOptions.targetDevHub,
     });
   }
 }

@@ -1,27 +1,41 @@
 import { ScratchOrgCreateOptions, ScratchOrgCreateResult } from '@salesforce/core';
-import { SSDX } from 'lib/config/ssdx-config.js';
+import BaseOptions from 'dto/base-options.dto.js';
 
 //  TODO: convert to object with properties and methods, such as setAlias, chooseConfig, verifyPackageKey, findDevhub, setDevhub, setScratchOrgConfig
-export default interface CreateOptions {
-  scratchOrgConfig: ScratchOrgCreateOptions;
-  scratchOrgResult: ScratchOrgCreateResult;
+export default class CreateOptions extends BaseOptions {
+  public static scratchOrgConfig: ScratchOrgCreateOptions;
+  public static scratchOrgResult: ScratchOrgCreateResult;
 
   // parameters
-  configFile: string;
-  durationDays: string;
-  scratchOrgName: string;
-  targetDevHub: string;
-  packageKey: string;
+  public static configFile: string;
+  public static durationDays: string;
+  public static scratchOrgName: string; // TODO: remove and use targetOrg
+  public static packageKey: string;
 
   // flags
-  deleteCurrentOrg: string;
-  disableNotifications: string;
-  skipDependencies: string;
-  skipDeployment: string;
-  skipPermsetAssignment: string;
+  public static deleteCurrentOrg: string;
+  public static skipDependencies: string;
+  public static skipDeployment: string;
+  public static skipPermsetAssignment: string;
 
   // debug
-  keepExistingOrg: string;
+  public static keepExistingOrg: string;
 
-  ssdxConfig: SSDX;
+  public static setFields(options: typeof CreateOptions): void {
+    super.setFields(options);
+    CreateOptions.scratchOrgConfig = options.scratchOrgConfig;
+    CreateOptions.scratchOrgResult = options.scratchOrgResult;
+
+    CreateOptions.configFile = options.configFile;
+    CreateOptions.durationDays = options.durationDays;
+    CreateOptions.scratchOrgName = options.scratchOrgName;
+    CreateOptions.packageKey = options.packageKey;
+
+    CreateOptions.deleteCurrentOrg = options.deleteCurrentOrg;
+    CreateOptions.skipDependencies = options.skipDependencies;
+    CreateOptions.skipDeployment = options.skipDeployment;
+    CreateOptions.skipPermsetAssignment = options.skipPermsetAssignment;
+
+    CreateOptions.keepExistingOrg = options.keepExistingOrg;
+  }
 }

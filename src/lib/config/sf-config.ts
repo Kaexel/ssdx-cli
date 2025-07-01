@@ -84,8 +84,8 @@ export async function setCurrentScratchOrg(alias: string): Promise<void> {
 /*                                   DevHub                                   */
 /* -------------------------------------------------------------------------- */
 
-export async function getDevHub(options: CreateOptions): Promise<Org> {
-  const alias = options.targetDevHub || (await getCurrentDevHubAlias());
+export async function getDevHub(): Promise<Org> {
+  const alias = CreateOptions.targetDevHub || (await getCurrentDevHubAlias());
 
   if (!alias) {
     throwError('No default DevHub found. Please authenticate one.');
@@ -127,12 +127,12 @@ export async function getOrg(alias?: string): Promise<Org | undefined> {
   }
 }
 
-export async function readOrgDefinition(options: CreateOptions): Promise<Record<string, unknown>> {
+export async function readOrgDefinition(): Promise<Record<string, unknown>> {
   try {
     const fs = await import('fs/promises');
-    const definitionContent = await fs.readFile(options.configFile, 'utf8');
+    const definitionContent = await fs.readFile(CreateOptions.configFile, 'utf8');
     return JSON.parse(definitionContent) as Record<string, unknown>;
   } catch (error) {
-    throwError(`Failed to read org definition file: ${options.configFile}. ${String(error)}`);
+    throwError(`Failed to read org definition file: ${CreateOptions.configFile}. ${String(error)}`);
   }
 }

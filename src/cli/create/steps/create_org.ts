@@ -8,13 +8,13 @@ import { handleProcessSignals } from 'lib/process.js';
 import { getDevHub, readOrgDefinition } from 'lib/config/sf-config.js';
 import { throwError } from 'lib/log.js';
 
-export async function createScratchOrg(options: CreateOptions): Promise<void> {
-  const org = new create_org(options);
+export async function createScratchOrg(): Promise<void> {
+  const org = new create_org();
   org.init();
   await org.setDevHub();
   await org.setOrgConfig();
 
-  if (options.keepExistingOrg) {
+  if (CreateOptions.keepExistingOrg) {
     org.keepScratchOrg();
   } else {
     await org.createScratchOrg();
@@ -22,14 +22,11 @@ export async function createScratchOrg(options: CreateOptions): Promise<void> {
 }
 
 class create_org {
-  options: CreateOptions;
   spinner!: Ora;
   hubOrg!: Org;
   orgConfig!: Record<string, unknown>;
 
-  constructor(options: CreateOptions) {
-    this.options = options;
-  }
+  constructor() {}
 
   public init(): void {
     this.spinner = ora('Creating Scratch Org ...').start();
@@ -37,18 +34,18 @@ class create_org {
   }
 
   public async setDevHub(): Promise<void> {
-    this.hubOrg = await getDevHub(this.options);
+    this.hubOrg = await getDevHub(CreateOptions);
   }
 
   public async setOrgConfig(): Promise<void> {
-    this.orgConfig = await readOrgDefinition(this.options);
+    this.orgConfig = await readOrgDefinition(CreateOptions);
   }
 
   get scratchOrgOptions(): ScratchOrgCreateOptions {
     return {
       hubOrg: this.hubOrg,
-      alias: this.options.scratchOrgName,
-      durationDays: parseInt(this.options.durationDays),
+      alias: CreateOptions.scratchOrgName,
+      durationDays: parseInt(CreateOptions.durationDays),
       orgConfig: this.orgConfig,
       wait: Duration.minutes(45),
       setDefault: true, // TODO: set to false and make default at the end of the process
@@ -57,10 +54,10 @@ class create_org {
   }
 
   public keepScratchOrg(): void {
-    this.options.scratchOrgResult = { username: this.options.scratchOrgName } as ScratchOrgCreateResult;
-    this.spinner.suffixText = `done! (kept ${colors.yellow(this.options.scratchOrgResult.username || '')})`;
+    CreateOptions.scratchOrgResult = { username: CreateOptions.scratchOrgName } as ScratchOrgCreateResult;
+    this.spinner.suffixText = `done! (kept ${colors.yellow(CreateOptions.scratchOrgResult.username || '')})`;
     this.spinner.succeed();
-    print.success(`Scratch Org created successfully with alias: ${this.options.scratchOrgName}`, {
+    print.success(`Scratch Org created successfully with alias: ${CreateOptions.scratchOrgName}`, {
       output: false,
       log: true,
     });
@@ -68,11 +65,11 @@ class create_org {
 
   public async createScratchOrg(): Promise<void> {
     try {
-      this.options.scratchOrgResult = await scratchOrgCreate(this.scratchOrgOptions);
+      CreateOptions.scratchOrgResult = await scratchOrgCreate(this.scratchOrgOptions);
 
-      this.spinner.suffixText = `done! (${colors.yellow(this.options.scratchOrgResult.username || '')})`;
+      this.spinner.suffixText = `done! (${colors.yellow(CreateOptions.scratchOrgResult.username || '')})`;
       this.spinner.succeed();
-      print.success(`Scratch Org created successfully with alias: ${this.options.scratchOrgName}`, {
+      print.success(`Scratch Org created successfully with alias: ${CreateOptions.scratchOrgName}`, {
         output: false,
         log: true,
       });

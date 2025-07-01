@@ -5,8 +5,8 @@ import * as print from 'lib/print-helper.js';
 import { run, OutputType } from 'lib/command-helper.js';
 import SfdxProject from '../dto/sfdx-project.dto.js';
 
-export async function installDependencies(options: CreateOptions): Promise<void> {
-  const dependencies = new Dependencies(options);
+export async function installDependencies(): Promise<void> {
+  const dependencies = new Dependencies();
   await dependencies.install();
 }
 
@@ -14,8 +14,7 @@ class Dependencies {
   sfdxProject!: SfdxProject;
   options!: CreateOptions;
 
-  constructor(options: CreateOptions) {
-    this.options = options;
+  constructor() {
     this.getSfdxProject();
   }
 
@@ -39,7 +38,7 @@ class Dependencies {
 
     print.subheader('Install Dependencies');
 
-    if (this.options.skipDependencies) {
+    if (CreateOptions.skipDependencies) {
       print.warning('Skipping dependency installation');
       return;
     }
@@ -62,15 +61,15 @@ class Dependencies {
   }
 
   private get alias(): string {
-    return this.options.scratchOrgName ?? '';
+    return CreateOptions.scratchOrgName ?? '';
   }
 
   private get devhub(): string {
-    return this.options.targetDevHub;
+    return CreateOptions.targetDevHub;
   }
 
   private get packageKey(): string {
-    return this.options.packageKey;
+    return CreateOptions.packageKey;
   }
 
   private get packageKeys(): string {
