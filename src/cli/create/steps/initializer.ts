@@ -8,8 +8,8 @@ import CreateOptions from '../dto/create.dto.js';
 import { chooseDevhub } from './devhub.js';
 import { Org } from '@salesforce/core';
 import { makeDirectory } from 'make-dir';
-import * as ssdx from 'lib/config/ssdx-config.js';
 import { getCurrentDevHubAlias } from 'lib/config/sf-config.js';
+import { fetchConfig, SSDX } from 'lib/config/ssdx-config.js';
 
 const CONFIG_FOLDER_PATH = './config/';
 
@@ -18,7 +18,6 @@ export async function initialize(): Promise<void> {
 
   const init = new initializer();
   init.setScratchOrgConfig();
-  init.setSsdxConfig();
   await init.setAlias();
   await init.chooseConfig();
   init.setConfig();
@@ -29,8 +28,10 @@ export async function initialize(): Promise<void> {
 
 class initializer {
   options!: CreateOptions;
+  ssdxConfig!: SSDX;
 
   constructor() {
+    this.ssdxConfig = fetchConfig();
     CreateOptions.scratchOrgConfig = {
       hubOrg: {} as Org,
     };
@@ -40,10 +41,6 @@ class initializer {
     CreateOptions.scratchOrgConfig.durationDays = parseInt(CreateOptions.durationDays);
     CreateOptions.scratchOrgConfig.wait = new Duration(45, Duration.Unit.MINUTES);
     CreateOptions.scratchOrgConfig.setDefault = true;
-  }
-
-  public setSsdxConfig(): void {
-    CreateOptions.ssdxConfig = ssdx.fetchConfig();
   }
 
   // TODO: send inn mange Questions til prompt, for å få spørsmålene samlet
@@ -60,8 +57,8 @@ class initializer {
   public async chooseConfig() {
     if (CreateOptions.configFile) {
       return;
-    } else if (CreateOptions.ssdxConfig.config.default_config) {
-      CreateOptions.configFile = CreateOptions.ssdxConfig.config.default_config;
+    } else if (this.ssdxConfig.config.default_config) {
+      CreateOptions.configFile = this.ssdxConfig.config.default_config;
     } else {
       await this.configDecision();
     }

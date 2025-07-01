@@ -8,6 +8,7 @@ import { logger } from 'lib/log.js';
 import { queryRecord } from 'lib/sf-helper.js';
 import ResourceOptions from './dto/resource.dto.js';
 import { SlotType } from 'lib/config/ssdx-config.js';
+import { fetchConfig, SSDX } from 'lib/config/ssdx-config.js';
 
 export async function startResourcePreDependencies(): Promise<void> {
   await new ResourceAssignmentManager().startResource(SlotType.PRE_DEPENDENCIES);
@@ -26,27 +27,26 @@ export async function startResourcePostInstall(): Promise<void> {
 }
 
 export async function startAllResources(): Promise<void> {
-  await new ResourceAssignmentManager().startAllResources();
+  await startResourcePreDependencies();
+  await startResourcePreDeploy();
+  await startResourcePostDeploy();
+  await startResourcePostInstall();
 }
 
 export class ResourceAssignmentManager {
-  public async startResource(slotType: SlotType): Promise<void> {
-    // if (!ResourceOptions.ssdxConfig.hasResources()) return; // TODO: enable
+  ssdxConfig: SSDX;
 
-    print.subheader(slotType + ' Steps', undefined, Color.bgCyan);
-
-    for (const resource of ResourceOptions.ssdxConfig.resource(slotType)) {
-      await this.waitForPermsetGroup(resource);
-      await this.runResource(resource);
-    }
+  constructor() {
+    this.ssdxConfig = fetchConfig();
   }
 
-  public async startAllResources(): Promise<void> {
-    if (!ResourceOptions.ssdxConfig.hasResources()) return;
+  public async startResource(slotType: SlotType): Promise<void> {
+    const resources = this.ssdxConfig.getResource(slotType);
+    if (!resources.length) return;
 
-    print.subheader(ResourceOptions.ssdxConfig.resourceTypes.join(', ') + ' Steps', undefined, Color.bgCyan);
+    print.subheader(`Running ${slotType} Resources`, undefined, Color.bgCyan);
 
-    for (const resource of ResourceOptions.ssdxConfig.resources) {
+    for (const resource of resources) {
       await this.waitForPermsetGroup(resource);
       await this.runResource(resource);
     }
