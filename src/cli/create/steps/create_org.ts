@@ -71,7 +71,6 @@ class create_org {
       this.spinner.suffixText = `done! (${colors.yellow(CreateOptions.scratchOrgResult.username || '')})`;
       this.spinner.succeed();
       print.info(this.successText);
-      print.notificationSuccess(this.successText);
     } catch (error) {
       this.spinner.fail('Failed to create Scratch Org');
       throwError(String(error));
