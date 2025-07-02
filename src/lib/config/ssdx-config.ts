@@ -27,7 +27,7 @@ export class SSDX {
     if (fs.existsSync('ssdx-config.json')) {
       return fs.readFileSync('ssdx-config.json', 'utf8');
     } else {
-      print.error('ssdx-config.json file not found in current directory', { notification: false });
+      print.warning('ssdx-config.json file not found in current directory');
       return '{}';
     }
   }

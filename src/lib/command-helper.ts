@@ -184,8 +184,8 @@ export class Command {
   }
   private printError() {
     if (!this.outputError || this.showSpinner) return;
-    print.error('\nERROR! See message below:\n', { log: false });
-    print.error(this.output.stdout.join('\n') + '\n', { log: false });
+    print.error('\nERROR! See message below:\n');
+    print.error(this.output.stdout.join('\n') + '\n');
 
     if (this.exitOnError) exit(1);
   }
@@ -246,8 +246,8 @@ export async function runCmd(cmd: string, args: string[] = []): Promise<string> 
     shell: true,
     encoding: 'utf8',
   }).catch(error => {
-    print.error('Error running command:', { log: false });
-    print.code(`${cmd} ${args.join(' ')}`, { log: false });
+    print.error('Error running command:');
+    print.code(`${cmd} ${args.join(' ')}`);
     throw error;
   });
 
