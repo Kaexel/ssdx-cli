@@ -60,7 +60,7 @@ export class SSDX {
       case SlotType.POST_INSTALL:
         return this.config.post_install ?? [];
       default:
-        logger.error(`ERROR: Unsupported slot type: ${slotOption as string}`);
+        print.error(`ERROR: Unsupported slot type: ${slotOption as string}`);
         return [];
     }
   }
@@ -116,7 +116,7 @@ export class SSDX {
           ];
           break;
         default:
-          logger.error(`ERROR: Unsupported resource type: ${resource.type as string}`);
+          print.error(`ERROR: Unsupported resource type: ${resource.type as string}`);
           resource.skip = true;
           break;
       }

@@ -154,7 +154,7 @@ export class Command {
   }
 
   private async runCmd() {
-    logger.info(`Running command: ${this.cmd} ${this.args.join(' ')}`);
+    print.debug(`Running command: ${this.cmd} ${this.args.join(' ')}`);
     await this.child
       .on('exit', code => {
         this.output.code = code as number;

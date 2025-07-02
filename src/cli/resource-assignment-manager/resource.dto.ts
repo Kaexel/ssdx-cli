@@ -1,4 +1,4 @@
-import { logger } from 'lib/log.js';
+import * as print from 'lib/print-helper.js';
 import BaseOptions from 'dto/base.dto.js';
 
 export enum TestLevel {
@@ -26,6 +26,6 @@ export default class ResourceOptions extends BaseOptions {
     ResourceOptions.testLevel = options.testLevel;
     ResourceOptions.ci = options.ci;
 
-    logger.info(options, 'Running setFields in ResourceOptions');
+    print.debug('Parsing resource command parameters', options);
   }
 }

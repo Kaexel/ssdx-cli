@@ -48,6 +48,10 @@ export interface PrintOptions {
   notification?: boolean;
 }
 
+export function debug(text: string, obj?: object): void {
+  logger.info(obj, text);
+  // console.log(colors.yellow(text)); // TODO: enable and log obj
+}
 export function info(text: string, options: PrintOptions = {}): void {
   const { output = true, log = true, notification = false } = options;
   if (log) logger.info(text);
