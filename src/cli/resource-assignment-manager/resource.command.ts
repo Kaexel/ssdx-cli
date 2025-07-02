@@ -33,7 +33,7 @@ export class ResourceCommand {
       .option('--post-deploy', 'Runs "post_deploy" resources', false)
       .option('--post-install', 'Runs "post_install" resources', false)
 
-      .optionsGroup('Outout')
+      .optionsGroup('Output')
       .option('--disable-notifications', 'Disabled OS notifications for steps')
       .option('--show-output', 'Show output of resource assignments', false)
       .option('--ci', 'Disables fancy feature for a slimmer output', false)
