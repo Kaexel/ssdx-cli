@@ -21,6 +21,9 @@ export function info(text: string): void {
   logger.info(text);
   console.log(text);
 }
+export function log(text: string): void {
+  logger.info(text);
+}
 export function output(text: string): void {
   console.log(text);
 }
