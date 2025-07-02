@@ -6,7 +6,7 @@ import pad from 'pad';
 import { Resource, ResourceType } from 'dto/ssdx-config.dto.js';
 import { logger } from 'lib/log.js';
 import { queryRecord } from 'lib/sf-helper.js';
-import ResourceOptions from './dto/resource.dto.js';
+import ResourceOptions from './resource.dto.js';
 import { SlotType } from 'lib/config/ssdx-config.js';
 import { fetchConfig, SSDX } from 'lib/config/ssdx-config.js';
 

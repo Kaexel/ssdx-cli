@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import { startAllResources } from './resource-assignment-manager.js';
 import { Color, setColor, setColors } from 'lib/print-helper/print-helper-formatter.js';
-import ResourceOptions from './dto/resource.dto.js';
+import ResourceOptions from './resource.dto.js';
 
 const DESCRIPTION = `${setColors('Configurable resource assignment to orgs. This option allows:', [Color.yellow, Color.bold])}
   - Running Apex

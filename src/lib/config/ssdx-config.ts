@@ -1,4 +1,4 @@
-import ResourceOptions from 'cli/resource-assignment-manager/dto/resource.dto.js';
+import ResourceOptions from 'cli/resource-assignment-manager/resource.dto.js';
 import { Resource, ResourceType, ssdxConfig } from 'dto/ssdx-config.dto.js';
 import fs from 'fs';
 import { logger } from 'lib/log.js';
