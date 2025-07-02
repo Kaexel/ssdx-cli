@@ -73,10 +73,9 @@ export function error(text: string): void {
   void Notification.showError(text);
   console.log(colors.bold(colors.red(text)));
 }
-export function code(text: string, options: PrintOptions = {}): void {
-  const { output = true, log = true } = options;
-  if (log) logger.info(text);
-  if (output) console.log(colors.bgGreen(colors.black(text)));
+export function code(text: string): void {
+  logger.info(text);
+  console.log(colors.bgGreen(colors.black(text)));
 }
 
 // Notifications
