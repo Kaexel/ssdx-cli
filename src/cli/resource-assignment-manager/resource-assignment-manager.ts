@@ -1,32 +1,54 @@
 import { OutputType, run } from 'lib/command-helper.js';
-import ora from 'ora';
+import ora, { Ora } from 'ora';
 import * as print from 'lib/print-helper.js';
-import { SlotOption } from './dto/resource-config.dto.js';
-import { SSDX, fetchConfig } from 'lib/config/ssdx-config.js';
 import { Color, setColor } from 'lib/print-helper/print-helper-formatter.js';
 import pad from 'pad';
 import { Resource, ResourceType } from 'dto/ssdx-config.dto.js';
 import { logger } from 'lib/log.js';
 import { queryRecord } from 'lib/sf-helper.js';
+import ResourceOptions from './resource.dto.js';
+import { SlotType } from 'lib/config/ssdx-config.js';
+import { fetchConfig, SSDX } from 'lib/config/ssdx-config.js';
+import { handleProcessSignals } from 'lib/process.js';
+
+export async function startResourcePreDependencies(): Promise<void> {
+  await new ResourceAssignmentManager().startResource(SlotType.PRE_DEPENDENCIES);
+}
+
+export async function startResourcePreDeploy(): Promise<void> {
+  await new ResourceAssignmentManager().startResource(SlotType.PRE_DEPLOY);
+}
+
+export async function startResourcePostDeploy(): Promise<void> {
+  await new ResourceAssignmentManager().startResource(SlotType.POST_DEPLOY);
+}
+
+export async function startResourcePostInstall(): Promise<void> {
+  await new ResourceAssignmentManager().startResource(SlotType.POST_INSTALL);
+}
+
+export async function startAllResources(): Promise<void> {
+  await startResourcePreDependencies();
+  await startResourcePreDeploy();
+  await startResourcePostDeploy();
+  await startResourcePostInstall();
+}
 
 export class ResourceAssignmentManager {
-  options: SlotOption;
-  targetOrg: string;
-  ssdxConfig: SSDX = fetchConfig();
+  ssdxConfig: SSDX;
+  spinner!: Ora;
 
-  constructor(options: SlotOption, targetOrg: string) {
-    logger.info(options, 'Running ResourceAssignmentManager');
-    this.ssdxConfig.setSlotOption(options);
-    this.options = options;
-    this.targetOrg = targetOrg;
+  constructor() {
+    this.ssdxConfig = fetchConfig();
   }
 
-  public async run(): Promise<void> {
-    if (!this.ssdxConfig.hasResources()) return;
+  public async startResource(slotType: SlotType): Promise<void> {
+    const resources = this.ssdxConfig.getResource(slotType);
+    if (!resources.length) return;
 
-    print.subheader(this.ssdxConfig.resourceTypes.join(', ') + ' Steps', undefined, Color.bgCyan);
+    print.subheader(`Running ${slotType} Resources`, undefined, Color.bgCyan);
 
-    for (const resource of this.ssdxConfig.resources) {
+    for (const resource of resources) {
       await this.waitForPermsetGroup(resource);
       await this.runResource(resource);
     }
@@ -39,29 +61,30 @@ export class ResourceAssignmentManager {
     const spinnerText =
       this.getType(resource) +
       `Waiting for permission set group '${setColor(resource.value, Color.green)}' to be updated`;
-    const spinner = ora(spinnerText).start();
+    this.spinner = ora(spinnerText).start();
+    handleProcessSignals(this.spinner);
 
     let output = await this.checkPermsetStatus(resource);
     let count = 0;
 
     while (output.totalSize === 0 && count < this.max) {
-      spinner.text = `${spinnerText}...  (${count++}/${this.max})`;
+      this.spinner.text = `${spinnerText}...  (${count++}/${this.max})`;
       await new Promise(resolve => setTimeout(resolve, 1000 * count));
       output = await this.checkPermsetStatus(resource);
     }
 
     if (output.totalSize === 0) {
       logger.error(`Permission set group '${resource.value}' did not update after ${this.max} attempts`);
-      spinner.fail();
+      this.spinner.fail();
     } else {
-      spinner.succeed();
+      this.spinner.succeed();
     }
   }
 
   private async checkPermsetStatus(resource: Resource) {
     return await queryRecord(
       `SELECT Count() FROM PermissionSetGroup WHERE DeveloperName = '${resource.value}' AND Status = 'Updated'`,
-      this.targetOrg
+      await ResourceOptions.getTargetOrg()
     );
   }
 
@@ -69,7 +92,7 @@ export class ResourceAssignmentManager {
     if (resource.skip) return this.skipResource(resource);
     logger.info(resource, 'Running resource from resource-assignment-manager.ts');
 
-    this.addTargetOrg(resource);
+    await this.addTargetOrg(resource);
 
     await run({
       cmd: resource.cmd,
@@ -80,7 +103,7 @@ export class ResourceAssignmentManager {
     });
   }
 
-  private addTargetOrg(resource: Resource) {
+  private async addTargetOrg(resource: Resource) {
     if (resource.skip_target_org) {
       return;
     }
@@ -91,12 +114,12 @@ export class ResourceAssignmentManager {
     }
 
     // always add the target-org value to the args (if not skipping). JS scripts will be added without name, and SF commands will have the value with --target-org before
-    resource.args.push(this.targetOrg);
+    resource.args.push(await ResourceOptions.getTargetOrg());
   }
 
   private getOutputType(resource: Resource): OutputType {
-    if (this.options.ci) return OutputType.OutputLiveWithHeader;
-    if (this.options.showOutput || resource.print_output) return OutputType.SpinnerAndOutput;
+    if (ResourceOptions.ci) return OutputType.OutputLiveWithHeader;
+    if (ResourceOptions.showOutput || resource.print_output) return OutputType.SpinnerAndOutput;
     return OutputType.Spinner;
   }
 

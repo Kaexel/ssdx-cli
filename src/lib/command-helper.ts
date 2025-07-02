@@ -6,6 +6,7 @@ import { exit } from 'process';
 import { logger, loggerError, loggerInfo } from './log.js';
 import pino from 'pino';
 import { StdioOptions } from 'node:child_process';
+import { handleProcessSignals } from './process.js';
 
 export async function run(options: CmdOption): Promise<CmdResult> {
   const cmd = new Command(options);
@@ -109,11 +110,12 @@ export class Command {
   private startSpinner() {
     if (this.showSpinner) {
       this.spinner = ora(this.spinnerText).start();
+      handleProcessSignals(this.spinner);
     }
   }
   private printHeader() {
     if (this.showHeader) {
-      print.info(this.spinnerText, { log: false });
+      print.output(this.spinnerText);
     }
   }
   private printSeparator() {
@@ -154,7 +156,7 @@ export class Command {
   }
 
   private async runCmd() {
-    logger.info(`Running command: ${this.cmd} ${this.args.join(' ')}`);
+    print.debug(`Running command: ${this.cmd} ${this.args.join(' ')}`);
     await this.child
       .on('exit', code => {
         this.output.code = code as number;
@@ -184,8 +186,8 @@ export class Command {
   }
   private printError() {
     if (!this.outputError || this.showSpinner) return;
-    print.error('\nERROR! See message below:\n', { log: false });
-    print.error(this.output.stdout.join('\n') + '\n', { log: false });
+    print.error('\nERROR! See message below:\n');
+    print.error(this.output.stdout.join('\n') + '\n');
 
     if (this.exitOnError) exit(1);
   }
@@ -203,7 +205,7 @@ export class Command {
   private printOutput() {
     if (this.showEndSeparator) print.printSeparator();
     if (this.endOutput && this.output.code === 0) {
-      print.info(this.output.stdout.join('\n') + '\n', { log: false });
+      print.output(this.output.stdout.join('\n') + '\n');
     }
   }
 }
@@ -246,8 +248,8 @@ export async function runCmd(cmd: string, args: string[] = []): Promise<string> 
     shell: true,
     encoding: 'utf8',
   }).catch(error => {
-    print.error('Error running command:', { log: false });
-    print.code(`${cmd} ${args.join(' ')}`, { log: false });
+    print.error('Error running command:');
+    print.code(`${cmd} ${args.join(' ')}`);
     throw error;
   });
 

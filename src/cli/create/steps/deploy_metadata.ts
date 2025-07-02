@@ -1,29 +1,25 @@
 import ora from 'ora';
-import CreateOptions from '../dto/create-options.dto.js';
+import CreateOptions from '../create.dto.js';
 import * as print from 'lib/print-helper.js';
 import { run, OutputType } from 'lib/command-helper.js';
 
-export async function deployMetadata(options: CreateOptions): Promise<void> {
-  const metadata = new Metadata(options);
+export async function deployMetadata(): Promise<void> {
+  const metadata = new Metadata();
   await metadata.deploy();
 }
 
-export async function clearingTracking(options: CreateOptions): Promise<void> {
-  const metadata = new Metadata(options);
+export async function clearingTracking(): Promise<void> {
+  const metadata = new Metadata();
   await metadata.resetTracking();
 }
 
 class Metadata {
   options!: CreateOptions;
 
-  constructor(options: CreateOptions) {
-    this.options = options;
-  }
-
   public async deploy(): Promise<void> {
     print.subheader('Deploy Metadata');
 
-    if (this.options.skipDeployment) {
+    if (CreateOptions.skipDeployment) {
       print.warning('Skipping deployment');
       return;
     }
@@ -48,6 +44,6 @@ class Metadata {
   }
 
   private get alias(): string {
-    return this.options.scratchOrgName ?? '';
+    return CreateOptions.scratchOrgName ?? '';
   }
 }

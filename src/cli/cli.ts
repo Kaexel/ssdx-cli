@@ -2,7 +2,6 @@ import * as print from 'lib/print-helper.js';
 import { Command } from 'commander';
 import CreateCommand from './create/create.command.js';
 import { ResourceCommand } from './resource-assignment-manager/resource.command.js';
-import { logger } from 'lib/log.js';
 import { VERSION } from './version.js';
 
 export default class cli {
@@ -14,8 +13,8 @@ export default class cli {
   }
 
   public run(): void {
-    logger.info(`SSDX version: ${VERSION}`);
-    logger.info(`Node version: ${process.version}`);
+    print.debug(`SSDX version: ${VERSION}`);
+    print.debug(`Node version: ${process.version}`);
     print.header('SSDX CLI');
     cli.program
       .name('ssdx-cli')

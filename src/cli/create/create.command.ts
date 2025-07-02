@@ -1,25 +1,27 @@
 import * as print from 'lib/print-helper.js';
 import colors from 'colors/safe.js';
 import { Command } from 'commander';
-import CreateOptions from './dto/create-options.dto.js';
+import CreateOptions from './create.dto.js';
 import { createScratchOrg } from './steps/create_org.js';
 import { installDependencies } from './steps/dependencies.js';
 import { initialize } from './steps/initializer.js';
 import { clearingTracking, deployMetadata } from './steps/deploy_metadata.js';
 import { openOrg } from './steps/open_org.js';
-import { getSlotOptions } from 'cli/resource-assignment-manager/dto/resource-config.dto.js';
-import { resourceAssignmentManager } from 'cli/resource-assignment-manager/resource.command.js';
 import { delete_question } from './steps/delete-existing.js';
-import { Notification } from 'lib/notification.js';
+import {
+  startResourcePostDeploy,
+  startResourcePreDependencies,
+  startResourcePreDeploy,
+} from 'cli/resource-assignment-manager/resource-assignment-manager.js';
+import { addBaseOptions } from 'dto/base.dto.js';
 
 export default class CreateCommand {
-  options!: CreateOptions;
   program: Command;
 
   constructor(program: Command) {
     this.program = program;
 
-    this.program
+    const createCommand = this.program
       .command('create')
       .description('Create a Scratch org')
 
@@ -34,44 +36,38 @@ export default class CreateCommand {
 
       .optionsGroup('Flags')
       .option('--delete-current-org', 'Delete the current Scratch Org')
-      .option('--disable-notifications', 'Disabled OS notifications for steps')
       .option('--skip-dependencies', 'Skip dependency installation')
       .option('--skip-deployment', 'Skip deployment step')
+      .option('--keep-existing-org', 'Keep the existing Scratch Org');
 
-      .optionsGroup('Debug')
-      .option('--keep-existing-org', 'Keep the existing Scratch Org')
+    // Apply base options to the create command, not the main program
+    addBaseOptions(createCommand);
 
-      .action((options: CreateOptions) => {
-        this.options = options;
-        Notification.disableNotifications = !!options.disableNotifications;
-        void this.main();
-      });
+    createCommand.action((options: typeof CreateOptions) => {
+      CreateOptions.setFields(options);
+      void this.main();
+    });
   }
 
   private async main() {
-    await initialize(this.options);
-    await delete_question(this.options);
-    await createScratchOrg(this.options);
-
-    // assigner slots
-    const { preDependencies, preDeploy, postDeploy } = getSlotOptions(this.options.scratchOrgName);
+    await initialize();
+    await delete_question();
+    await createScratchOrg();
 
     // dependency install
-    await resourceAssignmentManager(preDependencies);
-    await installDependencies(this.options);
+    await startResourcePreDependencies();
+    await installDependencies();
 
     // deployment
-    await resourceAssignmentManager(preDeploy);
-    await deployMetadata(this.options);
-    await resourceAssignmentManager(postDeploy);
-    await clearingTracking(this.options);
+    await startResourcePreDeploy();
+    await deployMetadata();
+    await startResourcePostDeploy();
+    await clearingTracking();
 
-    await openOrg(this.options);
+    await openOrg();
 
-    print.success(`Scratch Org created successfully (alias: ${this.options.scratchOrgName})`, {
-      output: false,
-      log: true,
-      notification: true,
-    });
+    const text = `Scratch Org created successfully (alias: ${CreateOptions.scratchOrgName})`;
+    print.info(text);
+    print.notificationSuccess(text);
   }
 }

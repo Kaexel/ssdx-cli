@@ -4,17 +4,20 @@
     {
       "type": "sf",
       "value": "sf org display user",
+      "continue_on_error": true,
       "_description": "Allows you to run any sf command. In this case, the user details for the Scratch Org is outputted."
     },
     {
       "type": "sf",
       "value": "sf org generate password",
+      "continue_on_error": true,
       "print_output": true,
       "_description": "Set a password to the Scratch Org user. Can optionally set always_print_output to view the password, but errors are always outputted."
     },
     {
       "type": "sf",
       "value": "sf org:list",
+      "continue_on_error": true,
       "skip_target_org": true,
       "print_output": true,
       "_description": "Lists all the Scratch Orgs in the Dev Hub. skip_target_org is set to true, so the command is not run in the Scratch Org."
@@ -26,60 +29,71 @@
     },
     {
       "type": "apex",
-      "value": "bin/apex/enableChatUser.apex"
+      "value": "bin/apex/enableChatUser.apex",
+      "continue_on_error": true
     },
     {
       "type": "metadata",
-      "value": "bin/metadata/groups/pre_dep.group-meta.xml"
+      "value": "bin/metadata/groups/pre_dep.group-meta.xml",
+      "continue_on_error": true
     }
   ],
   "pre_deploy": [
     {
       "type": "js",
       "value": "bin/js/test.cjs",
-      "skip_target_org": true,
       "continue_on_error": true,
+      "skip_target_org": true,
       "_description": "Run a custom cjs/js script. Will not supply the target org to the script."
     },
     {
       "type": "metadata",
-      "value": "bin/metadata/labels/pre_deploy.labels-meta.xml"
+      "value": "bin/metadata/labels/pre_deploy.labels-meta.xml",
+      "continue_on_error": true
     }
   ],
   "post_deploy": [
     {
       "type": "permissionSetGroup",
-      "value": "TestGroup"
+      "value": "TestGroup",
+      "continue_on_error": true
     },
     {
       "type": "permissionSetLicense",
-      "value": "SlackServiceUserPsl"
+      "value": "SlackServiceUserPsl",
+      "continue_on_error": true
     },
     {
       "type": "apex",
-      "value": "bin/apex/addToGroup.apex"
+      "value": "bin/apex/addToGroup.apex",
+      "continue_on_error": true
     },
     {
       "type": "metadata",
-      "value": "force-app/main/default/labels"
+      "value": "force-app/main/default/labels",
+      "continue_on_error": true
     },
     {
       "type": "permissionSet",
-      "value": "test"
+      "value": "test",
+      "continue_on_error": true
     },
     {
       "type": "js",
-      "value": "bin/js/updatePermsetWithProdValues.cjs"
+      "value": "bin/js/updatePermsetWithProdValues.cjs",
+      "continue_on_error": true
     },
     {
       "type": "metadata",
-      "value": "bin/metadata/permissionsets/post_deploy.permissionset-meta.xml"
+      "value": "bin/metadata/permissionsets/post_deploy.permissionset-meta.xml",
+      "continue_on_error": true
     }
   ],
   "post_install": [
     {
       "type": "js",
-      "value": "bin/js/updatePermsetWithProdValues.cjs"
+      "value": "bin/js/updatePermsetWithProdValues.cjs",
+      "continue_on_error": true
     }
   ]
 }

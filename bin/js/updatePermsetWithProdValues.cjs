@@ -75,7 +75,7 @@ async function run() {
   const modifiedPermset = builder.buildObject(permset);
 
   // Write the modified permset back to the file
-  fs.writeFileSync(FILE, modifiedPermset);
+  //fs.writeFileSync(FILE, modifiedPermset); //! Disabled to avoid overwriting the file during development
 }
 
 // Run the script and make changes to the file

@@ -1,13 +1,13 @@
 import colors from 'colors/safe.js';
 import ora, { Ora } from 'ora';
-import CreateOptions from '../dto/create-options.dto.js';
+import CreateOptions from '../create.dto.js';
 import { Org } from '@salesforce/core';
 import { confirm } from '@inquirer/prompts';
 import { getCurrentScratchOrg, getCurrentScratchOrgAlias } from 'lib/config/sf-config.js';
 import { logger, throwError } from 'lib/log.js';
 
-export async function delete_question(options: CreateOptions): Promise<void> {
-  const org = new OrgManager(options);
+export async function delete_question(): Promise<void> {
+  const org = new OrgManager();
 
   if (await org.checkIfActiveScratchOrg()) {
     await org.askToDeleteOrg();
@@ -15,18 +15,15 @@ export async function delete_question(options: CreateOptions): Promise<void> {
 }
 
 class OrgManager {
-  options: CreateOptions;
   spinner!: Ora;
   currentScratchOrg?: Org;
 
-  constructor(options: CreateOptions) {
-    this.options = options;
-  }
+  constructor() {}
 
   public async checkIfActiveScratchOrg(): Promise<boolean> {
     this.currentScratchOrg = await getCurrentScratchOrg();
 
-    if (!this.currentScratchOrg || this.options.keepExistingOrg || (await this.notScratchOrg())) {
+    if (!this.currentScratchOrg || CreateOptions.keepExistingOrg || (await this.notScratchOrg())) {
       return false;
     }
 
