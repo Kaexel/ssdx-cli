@@ -1,6 +1,7 @@
 import { Command } from 'commander';
 import { startAllResources } from './resource-assignment-manager.js';
 import { Color, setColor, setColors } from 'lib/print-helper/print-helper-formatter.js';
+import { addBaseOptions } from 'dto/base.dto.js';
 import ResourceOptions from './resource.dto.js';
 
 const DESCRIPTION = `${setColors('Configurable resource assignment to orgs. This option allows:', [Color.yellow, Color.bold])}
@@ -19,7 +20,7 @@ export class ResourceCommand {
     this.program = program;
 
     // TODO: make at least one option required
-    this.program
+    const resourceCommand = this.program
       .command('resource')
       .description(DESCRIPTION)
 
@@ -34,18 +35,18 @@ export class ResourceCommand {
       .option('--post-install', 'Runs "post_install" resources', false)
 
       .optionsGroup('Output')
-      .option('--disable-notifications', 'Disabled OS notifications for steps')
-      .option('--show-output', 'Show output of resource assignments', false)
-      .option('--ci', 'Disables fancy feature for a slimmer output', false)
+      .option('--show-output', 'Show output of resource assignments', false);
 
-      .action((options: typeof ResourceOptions) => {
-        ResourceOptions.setFields(options);
-        void resourceAssignmentManager();
-      });
+    // Apply base options to the resource command, not the main program
+    addBaseOptions(resourceCommand);
+
+    resourceCommand.action((options: typeof ResourceOptions) => {
+      ResourceOptions.setFields(options);
+      void resourceAssignmentManager();
+    });
   }
 }
 
 export async function resourceAssignmentManager() {
-  // TODO: verify org is set (param or config) and is valid
   await startAllResources();
 }

@@ -14,7 +14,6 @@ export default class ResourceOptions extends BaseOptions {
   public static postInstall: boolean = false;
   public static showOutput: boolean = false;
   public static testLevel: TestLevel = TestLevel.NoTestRun;
-  public static ci: boolean = false;
 
   public static setFields(options: typeof ResourceOptions): void {
     super.setFields(options);
@@ -24,7 +23,6 @@ export default class ResourceOptions extends BaseOptions {
     ResourceOptions.postInstall = options.postInstall;
     ResourceOptions.showOutput = options.showOutput;
     ResourceOptions.testLevel = options.testLevel;
-    ResourceOptions.ci = options.ci;
 
     print.debug('Parsing resource command parameters', options);
   }

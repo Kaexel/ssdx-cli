@@ -14,6 +14,7 @@ import {
   startResourcePreDependencies,
   startResourcePreDeploy,
 } from 'cli/resource-assignment-manager/resource-assignment-manager.js';
+import { addBaseOptions } from 'dto/base.dto.js';
 
 export default class CreateCommand {
   program: Command;
@@ -21,7 +22,7 @@ export default class CreateCommand {
   constructor(program: Command) {
     this.program = program;
 
-    this.program
+    const createCommand = this.program
       .command('create')
       .description('Create a Scratch org')
 
@@ -36,19 +37,19 @@ export default class CreateCommand {
 
       .optionsGroup('Flags')
       .option('--delete-current-org', 'Delete the current Scratch Org')
-      .option('--disable-notifications', 'Disabled OS notifications for steps')
       .option('--skip-dependencies', 'Skip dependency installation')
       .option('--skip-deployment', 'Skip deployment step')
+      .option('--keep-existing-org', 'Keep the existing Scratch Org');
 
-      .optionsGroup('Debug')
-      .option('--keep-existing-org', 'Keep the existing Scratch Org')
+    // Apply base options to the create command, not the main program
+    addBaseOptions(createCommand);
 
-      .action((options: typeof CreateOptions) => {
-        CreateOptions.setFields(options);
+    createCommand.action((options: typeof CreateOptions) => {
+      CreateOptions.setFields(options);
 
-        Notification.disableNotifications = !!CreateOptions.disableNotifications;
-        void this.main();
-      });
+      Notification.disableNotifications = !!CreateOptions.disableNotifications;
+      void this.main();
+    });
   }
 
   private async main() {
