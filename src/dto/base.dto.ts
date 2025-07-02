@@ -1,5 +1,6 @@
 import { getCurrentScratchOrgAlias } from 'lib/config/sf-config.js';
 import { Command } from 'commander';
+import { Notification } from 'lib/notification.js';
 
 export function addBaseOptions(command: Command): void {
   command
@@ -24,6 +25,7 @@ export default class BaseOptions {
     BaseOptions.targetDevHub = options.targetDevHub;
 
     BaseOptions.disableNotifications = options.disableNotifications;
+    Notification.disableNotifications = !!options.disableNotifications;
     BaseOptions.ci = options.ci;
     BaseOptions.debug = options.debug;
     process.env.DEBUG = options.debug ? 'true' : 'false';

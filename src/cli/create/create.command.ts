@@ -8,7 +8,6 @@ import { initialize } from './steps/initializer.js';
 import { clearingTracking, deployMetadata } from './steps/deploy_metadata.js';
 import { openOrg } from './steps/open_org.js';
 import { delete_question } from './steps/delete-existing.js';
-import { Notification } from 'lib/notification.js';
 import {
   startResourcePostDeploy,
   startResourcePreDependencies,
@@ -46,8 +45,6 @@ export default class CreateCommand {
 
     createCommand.action((options: typeof CreateOptions) => {
       CreateOptions.setFields(options);
-
-      Notification.disableNotifications = !!CreateOptions.disableNotifications;
       void this.main();
     });
   }
