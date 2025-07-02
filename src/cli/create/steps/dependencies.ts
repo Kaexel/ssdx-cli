@@ -1,9 +1,9 @@
 import ora from 'ora';
-import CreateOptions from '../dto/create.dto.js';
+import CreateOptions from '../create.dto.js';
 import fs from 'fs';
 import * as print from 'lib/print-helper.js';
 import { run, OutputType } from 'lib/command-helper.js';
-import SfdxProject from '../dto/sfdx-project.dto.js';
+import { ProjectJson, PackagePackageDir, PackageDirDependency } from '@salesforce/schemas';
 
 export async function installDependencies(): Promise<void> {
   const dependencies = new Dependencies();
@@ -11,7 +11,7 @@ export async function installDependencies(): Promise<void> {
 }
 
 class Dependencies {
-  sfdxProject!: SfdxProject;
+  sfdxProject!: ProjectJson;
   options!: CreateOptions;
 
   constructor() {
@@ -22,15 +22,6 @@ class Dependencies {
     const SFDX_PROJECT_PATH = './sfdx-project.json';
     const SFDX_PROJECT_DATA = fs.readFileSync(SFDX_PROJECT_PATH, 'utf8');
     this.sfdxProject = JSON.parse(SFDX_PROJECT_DATA);
-  }
-
-  private get hasDependencies(): boolean {
-    return (
-      this.sfdxProject.packageDirectories &&
-      this.sfdxProject.packageDirectories.length > 0 &&
-      this.sfdxProject.packageDirectories[0].dependencies &&
-      this.sfdxProject.packageDirectories[0].dependencies.length > 0
-    );
   }
 
   public async install(): Promise<void> {
@@ -49,9 +40,9 @@ class Dependencies {
         '--installationkeys',
         this.packageKeys,
         '--targetusername',
-        this.alias,
+        CreateOptions.scratchOrgName,
         '--targetdevhubusername',
-        this.devhub,
+        CreateOptions.targetDevHub,
       ],
       outputType: OutputType.OutputLiveAndClear,
     });
@@ -60,32 +51,39 @@ class Dependencies {
     spinner.succeed();
   }
 
-  private get alias(): string {
-    return CreateOptions.scratchOrgName ?? '';
+  private get hasDependencies(): boolean {
+    return this.getDependencies.length > 0;
   }
 
-  private get devhub(): string {
-    return CreateOptions.targetDevHub;
+  private get getPackageDirectories(): PackagePackageDir[] {
+    if (!this.sfdxProject.packageDirectories || this.sfdxProject.packageDirectories.length === 0) {
+      return [];
+    }
+
+    const packageDirectories = this.sfdxProject.packageDirectories as PackagePackageDir[];
+    return packageDirectories || [];
   }
 
-  private get packageKey(): string {
-    return CreateOptions.packageKey;
+  private get getDependencies(): PackageDirDependency[] {
+    const packageDirectories = this.getPackageDirectories;
+    if (packageDirectories.length === 0) {
+      return [];
+    }
+
+    const dependencies = packageDirectories[0].dependencies as PackageDirDependency[];
+    return dependencies || [];
   }
 
   private get packageKeys(): string {
+    if (!this.hasDependencies) return '';
+
     const dependencies = [];
-    if (
-      this.sfdxProject.packageDirectories &&
-      this.sfdxProject.packageDirectories.length > 0 &&
-      this.sfdxProject.packageDirectories[0].dependencies &&
-      this.sfdxProject.packageDirectories[0].dependencies.length > 0
-    ) {
-      for (const dependency of this.sfdxProject.packageDirectories[0].dependencies) {
-        if (dependency.versionNumber) {
-          dependencies.push(`${dependency.package}:${this.packageKey}`);
-        }
+    for (const dependency of this.getDependencies) {
+      if (dependency.versionNumber) {
+        dependencies.push(`${dependency.package}:${CreateOptions.packageKey}`);
       }
     }
+
     return `"${dependencies.join(' ')}"`;
   }
 }
