@@ -64,12 +64,6 @@ export function info(text: string): void {
 export function output(text: string): void {
   console.log(text);
 }
-export function success(text: string, options: PrintOptions = {}): void {
-  const { output = true, log = true, notification = false } = options;
-  if (log) logger.info(text);
-  if (notification) void Notification.showSuccess(text);
-  if (output) console.log(text);
-}
 export function warning(text: string, options: PrintOptions = {}): void {
   const { output = true, log = true, notification = false } = options;
   if (log) logger.warn(text);

@@ -34,11 +34,11 @@ class create_org {
   }
 
   public async setDevHub(): Promise<void> {
-    this.hubOrg = await getDevHub(CreateOptions);
+    this.hubOrg = await getDevHub();
   }
 
   public async setOrgConfig(): Promise<void> {
-    this.orgConfig = await readOrgDefinition(CreateOptions);
+    this.orgConfig = await readOrgDefinition();
   }
 
   get scratchOrgOptions(): ScratchOrgCreateOptions {
@@ -53,14 +53,15 @@ class create_org {
     };
   }
 
+  private get successText(): string {
+    return `Scratch Org created successfully with alias: ${CreateOptions.scratchOrgName || ''}`;
+  }
+
   public keepScratchOrg(): void {
     CreateOptions.scratchOrgResult = { username: CreateOptions.scratchOrgName } as ScratchOrgCreateResult;
     this.spinner.suffixText = `done! (kept ${colors.yellow(CreateOptions.scratchOrgResult.username || '')})`;
     this.spinner.succeed();
-    print.success(`Scratch Org created successfully with alias: ${CreateOptions.scratchOrgName}`, {
-      output: false,
-      log: true,
-    });
+    print.info(this.successText);
   }
 
   public async createScratchOrg(): Promise<void> {
@@ -69,10 +70,8 @@ class create_org {
 
       this.spinner.suffixText = `done! (${colors.yellow(CreateOptions.scratchOrgResult.username || '')})`;
       this.spinner.succeed();
-      print.success(`Scratch Org created successfully with alias: ${CreateOptions.scratchOrgName}`, {
-        output: false,
-        log: true,
-      });
+      print.info(this.successText);
+      print.notificationSuccess(this.successText);
     } catch (error) {
       this.spinner.fail('Failed to create Scratch Org');
       throwError(String(error));
