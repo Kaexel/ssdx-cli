@@ -64,11 +64,9 @@ export function info(text: string): void {
 export function output(text: string): void {
   console.log(text);
 }
-export function warning(text: string, options: PrintOptions = {}): void {
-  const { output = true, log = true, notification = false } = options;
-  if (log) logger.warn(text);
-  if (notification) void Notification.showWarning(text);
-  if (output) console.log(colors.yellow(text));
+export function warning(text: string): void {
+  logger.warn(text);
+  console.log(colors.yellow(text));
 }
 export function error(text: string, options: PrintOptions = {}): void {
   const { output = true, log = true, notification = true } = options;
