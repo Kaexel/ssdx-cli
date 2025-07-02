@@ -1,6 +1,6 @@
 import colors from 'colors/safe.js';
 import ora, { Ora } from 'ora';
-import CreateOptions from '../dto/create.dto.js';
+import CreateOptions from '../create.dto.js';
 import { Org } from '@salesforce/core';
 import { confirm } from '@inquirer/prompts';
 import { getCurrentScratchOrg, getCurrentScratchOrgAlias } from 'lib/config/sf-config.js';

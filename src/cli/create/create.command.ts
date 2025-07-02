@@ -1,7 +1,7 @@
 import * as print from 'lib/print-helper.js';
 import colors from 'colors/safe.js';
 import { Command } from 'commander';
-import CreateOptions from './dto/create.dto.js';
+import CreateOptions from './create.dto.js';
 import { createScratchOrg } from './steps/create_org.js';
 import { installDependencies } from './steps/dependencies.js';
 import { initialize } from './steps/initializer.js';

@@ -4,7 +4,7 @@ import path from 'node:path';
 import * as print from 'lib/print-helper.js';
 import { input, password } from '@inquirer/prompts';
 import select from '@inquirer/select';
-import CreateOptions from '../dto/create.dto.js';
+import CreateOptions from '../create.dto.js';
 import { chooseDevhub } from './devhub.js';
 import { Org } from '@salesforce/core';
 import { makeDirectory } from 'make-dir';

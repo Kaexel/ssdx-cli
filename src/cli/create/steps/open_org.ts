@@ -1,4 +1,4 @@
-import CreateOptions from '../dto/create.dto.js';
+import CreateOptions from '../create.dto.js';
 import * as print from 'lib/print-helper.js';
 import { run, OutputType } from 'lib/command-helper.js';
 
