@@ -1,5 +1,5 @@
 import { OutputType, run } from 'lib/command-helper.js';
-import ora from 'ora';
+import ora, { Ora } from 'ora';
 import * as print from 'lib/print-helper.js';
 import { Color, setColor } from 'lib/print-helper/print-helper-formatter.js';
 import pad from 'pad';
@@ -9,6 +9,7 @@ import { queryRecord } from 'lib/sf-helper.js';
 import ResourceOptions from './resource.dto.js';
 import { SlotType } from 'lib/config/ssdx-config.js';
 import { fetchConfig, SSDX } from 'lib/config/ssdx-config.js';
+import { handleProcessSignals } from 'lib/process.js';
 
 export async function startResourcePreDependencies(): Promise<void> {
   await new ResourceAssignmentManager().startResource(SlotType.PRE_DEPENDENCIES);
@@ -35,6 +36,7 @@ export async function startAllResources(): Promise<void> {
 
 export class ResourceAssignmentManager {
   ssdxConfig: SSDX;
+  spinner!: Ora;
 
   constructor() {
     this.ssdxConfig = fetchConfig();
@@ -59,22 +61,23 @@ export class ResourceAssignmentManager {
     const spinnerText =
       this.getType(resource) +
       `Waiting for permission set group '${setColor(resource.value, Color.green)}' to be updated`;
-    const spinner = ora(spinnerText).start();
+    this.spinner = ora(spinnerText).start();
+    handleProcessSignals(this.spinner);
 
     let output = await this.checkPermsetStatus(resource);
     let count = 0;
 
     while (output.totalSize === 0 && count < this.max) {
-      spinner.text = `${spinnerText}...  (${count++}/${this.max})`;
+      this.spinner.text = `${spinnerText}...  (${count++}/${this.max})`;
       await new Promise(resolve => setTimeout(resolve, 1000 * count));
       output = await this.checkPermsetStatus(resource);
     }
 
     if (output.totalSize === 0) {
       logger.error(`Permission set group '${resource.value}' did not update after ${this.max} attempts`);
-      spinner.fail();
+      this.spinner.fail();
     } else {
-      spinner.succeed();
+      this.spinner.succeed();
     }
   }
 

@@ -6,6 +6,7 @@ import { exit } from 'process';
 import { logger, loggerError, loggerInfo } from './log.js';
 import pino from 'pino';
 import { StdioOptions } from 'node:child_process';
+import { handleProcessSignals } from './process.js';
 
 export async function run(options: CmdOption): Promise<CmdResult> {
   const cmd = new Command(options);
@@ -109,6 +110,7 @@ export class Command {
   private startSpinner() {
     if (this.showSpinner) {
       this.spinner = ora(this.spinnerText).start();
+      handleProcessSignals(this.spinner);
     }
   }
   private printHeader() {
