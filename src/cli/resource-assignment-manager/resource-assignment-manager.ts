@@ -81,7 +81,7 @@ export class ResourceAssignmentManager {
   private async checkPermsetStatus(resource: Resource) {
     return await queryRecord(
       `SELECT Count() FROM PermissionSetGroup WHERE DeveloperName = '${resource.value}' AND Status = 'Updated'`,
-      ResourceOptions.targetOrg
+      await ResourceOptions.getTargetOrg()
     );
   }
 
@@ -89,7 +89,7 @@ export class ResourceAssignmentManager {
     if (resource.skip) return this.skipResource(resource);
     logger.info(resource, 'Running resource from resource-assignment-manager.ts');
 
-    this.addTargetOrg(resource);
+    await this.addTargetOrg(resource);
 
     await run({
       cmd: resource.cmd,
@@ -100,7 +100,7 @@ export class ResourceAssignmentManager {
     });
   }
 
-  private addTargetOrg(resource: Resource) {
+  private async addTargetOrg(resource: Resource) {
     if (resource.skip_target_org) {
       return;
     }
@@ -111,7 +111,7 @@ export class ResourceAssignmentManager {
     }
 
     // always add the target-org value to the args (if not skipping). JS scripts will be added without name, and SF commands will have the value with --target-org before
-    resource.args.push(ResourceOptions.targetOrg);
+    resource.args.push(await ResourceOptions.getTargetOrg());
   }
 
   private getOutputType(resource: Resource): OutputType {
