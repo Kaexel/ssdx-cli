@@ -4,6 +4,61 @@ import { logger } from './log.js';
 import pad from 'pad';
 import { Notification } from './notification.js';
 
+/* -------------------------------------------------------------------------- */
+/*                                Output + logs                               */
+/* -------------------------------------------------------------------------- */
+
+function printDebug(): boolean {
+  return process.env.DEBUG === 'true';
+}
+
+export function debug(text: string, obj?: object): void {
+  logger.info(obj, text);
+  if (printDebug()) console.log(colors.yellow(text));
+  if (printDebug()) console.log(obj);
+}
+export function info(text: string): void {
+  logger.info(text);
+  console.log(text);
+}
+export function output(text: string): void {
+  console.log(text);
+}
+export function warning(text: string): void {
+  logger.warn(text);
+  console.log(colors.yellow(text));
+}
+export function error(text: string): void {
+  logger.error(text);
+  void Notification.showError(text);
+  console.log(colors.bold(colors.red(text)));
+}
+export function code(text: string): void {
+  logger.info(text);
+  console.log(colors.bgGreen(colors.black(text)));
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                Notifications                               */
+/* -------------------------------------------------------------------------- */
+
+export function notificationSuccess(text: string): void {
+  void Notification.showSuccess(text);
+}
+export function notificationInfo(text: string): void {
+  void Notification.showInfo(text);
+}
+export function notificationWarning(text: string): void {
+  void Notification.showWarning(text);
+}
+export function notificationError(text: string): void {
+  void Notification.showError(text);
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                   Headers                                  */
+/* -------------------------------------------------------------------------- */
+
 export function header(
   text: string,
   subText: string | undefined = undefined,
@@ -40,56 +95,6 @@ export function subheader(
   text = colors.bold(colors.black(text));
   text = setColors(text, [color, bgColor]);
   output(text);
-}
-
-export interface PrintOptions {
-  output?: boolean;
-  log?: boolean;
-  notification?: boolean;
-}
-
-function printDebug(): boolean {
-  return process.env.DEBUG === 'true';
-}
-
-export function debug(text: string, obj?: object): void {
-  logger.info(obj, text);
-  if (printDebug()) console.log(colors.yellow(text));
-  if (printDebug()) console.log(obj);
-}
-export function info(text: string): void {
-  logger.info(text);
-  console.log(text);
-}
-export function output(text: string): void {
-  console.log(text);
-}
-export function warning(text: string): void {
-  logger.warn(text);
-  console.log(colors.yellow(text));
-}
-export function error(text: string): void {
-  logger.error(text);
-  void Notification.showError(text);
-  console.log(colors.bold(colors.red(text)));
-}
-export function code(text: string): void {
-  logger.info(text);
-  console.log(colors.bgGreen(colors.black(text)));
-}
-
-// Notifications
-export function notificationSuccess(text: string): void {
-  void Notification.showSuccess(text);
-}
-export function notificationInfo(text: string): void {
-  void Notification.showInfo(text);
-}
-export function notificationWarning(text: string): void {
-  void Notification.showWarning(text);
-}
-export function notificationError(text: string): void {
-  void Notification.showError(text);
 }
 
 export function printSeparator(): void {
