@@ -20,7 +20,7 @@ export function header(
   text = frame(frameOptions);
   text = colors.bold(colors.black(text));
   text = setColors(text, [color, bgColor]);
-  info(text, { log: false });
+  output(text);
 }
 
 export function subheader(
@@ -39,7 +39,7 @@ export function subheader(
   text = frame(frameOptions);
   text = colors.bold(colors.black(text));
   text = setColors(text, [color, bgColor]);
-  info(text, { log: false });
+  output(text);
 }
 
 export interface PrintOptions {
@@ -57,11 +57,12 @@ export function debug(text: string, obj?: object): void {
   if (printDebug()) console.log(colors.yellow(text));
   if (printDebug()) console.log(obj);
 }
-export function info(text: string, options: PrintOptions = {}): void {
-  const { output = true, log = true, notification = false } = options;
-  if (log) logger.info(text);
-  if (notification) void Notification.showInfo(text);
-  if (output) console.log(text);
+export function info(text: string): void {
+  logger.info(text);
+  console.log(text);
+}
+export function output(text: string): void {
+  console.log(text);
 }
 export function success(text: string, options: PrintOptions = {}): void {
   const { output = true, log = true, notification = false } = options;
@@ -86,8 +87,23 @@ export function code(text: string, options: PrintOptions = {}): void {
   if (log) logger.info(text);
   if (output) console.log(colors.bgGreen(colors.black(text)));
 }
+
+// Notifications
+export function notificationSuccess(text: string): void {
+  void Notification.showSuccess(text);
+}
+export function notificationInfo(text: string): void {
+  void Notification.showInfo(text);
+}
+export function notificationWarning(text: string): void {
+  void Notification.showWarning(text);
+}
+export function notificationError(text: string): void {
+  void Notification.showError(text);
+}
+
 export function printSeparator(): void {
-  info(getSeparator(), { log: false });
+  output(getSeparator());
 }
 export function getSeparator(): string {
   return pad('', process.stdout.columns, '-');

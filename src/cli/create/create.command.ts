@@ -66,10 +66,8 @@ export default class CreateCommand {
 
     await openOrg();
 
-    print.success(`Scratch Org created successfully (alias: ${CreateOptions.scratchOrgName})`, {
-      output: false,
-      log: true,
-      notification: true,
-    });
+    const text = `Scratch Org created successfully (alias: ${CreateOptions.scratchOrgName})`;
+    print.success(text);
+    print.notificationSuccess(text);
   }
 }

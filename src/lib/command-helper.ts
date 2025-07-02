@@ -113,7 +113,7 @@ export class Command {
   }
   private printHeader() {
     if (this.showHeader) {
-      print.info(this.spinnerText, { log: false });
+      print.output(this.spinnerText);
     }
   }
   private printSeparator() {
@@ -203,7 +203,7 @@ export class Command {
   private printOutput() {
     if (this.showEndSeparator) print.printSeparator();
     if (this.endOutput && this.output.code === 0) {
-      print.info(this.output.stdout.join('\n') + '\n', { log: false });
+      print.output(this.output.stdout.join('\n') + '\n');
     }
   }
 }
