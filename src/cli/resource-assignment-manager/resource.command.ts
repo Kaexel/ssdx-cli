@@ -1,5 +1,10 @@
 import { Command } from 'commander';
-import { startAllResources } from './resource-assignment-manager.js';
+import {
+  startResourcePreDependencies,
+  startResourcePreDeploy,
+  startResourcePostDeploy,
+  startResourcePostInstall,
+} from './resource-assignment-manager.js';
 import { Color, setColor, setColors } from 'lib/print-helper/print-helper-formatter.js';
 import { addBaseOptions } from 'dto/base.dto.js';
 import ResourceOptions from './resource.dto.js';
@@ -48,5 +53,15 @@ export class ResourceCommand {
 }
 
 export async function resourceAssignmentManager() {
-  await startAllResources();
+  if (ResourceOptions.preDependencies) {
+    await startResourcePreDependencies();
+  }
+  if (ResourceOptions.preDeploy) {
+    await startResourcePreDeploy();
+  }
+  if (ResourceOptions.postDeploy) {
+    await startResourcePostDeploy();
+  } else if (ResourceOptions.postInstall) {
+    await startResourcePostInstall();
+  }
 }

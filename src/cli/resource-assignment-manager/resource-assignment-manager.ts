@@ -27,13 +27,6 @@ export async function startResourcePostInstall(): Promise<void> {
   await new ResourceAssignmentManager().startResource(SlotType.POST_INSTALL);
 }
 
-export async function startAllResources(): Promise<void> {
-  await startResourcePreDependencies();
-  await startResourcePreDeploy();
-  await startResourcePostDeploy();
-  await startResourcePostInstall();
-}
-
 export class ResourceAssignmentManager {
   ssdxConfig: SSDX;
   spinner!: Ora;
