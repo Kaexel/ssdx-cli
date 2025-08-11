@@ -1,7 +1,7 @@
 {
   "name": "ssdx-cli",
   "description": "A template for creating npm packages using TypeScript and VSCode",
-  "version": "1.6.5",
+  "version": "1.6.6",
   "exports": "./build/index.js",
   "typings": "./build/index.d.ts",
   "main": "index.js",
