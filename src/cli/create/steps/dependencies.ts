@@ -40,7 +40,7 @@ class Dependencies {
         '--installationkeys',
         this.packageKeys,
         '--targetusername',
-        CreateOptions.scratchOrgName,
+        `"${CreateOptions.scratchOrgName}"`,
         '--targetdevhubusername',
         CreateOptions.targetDevHub,
       ],
