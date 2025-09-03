@@ -107,7 +107,7 @@ export class ResourceAssignmentManager {
     }
 
     // always add the target-org value to the args (if not skipping). JS scripts will be added without name, and SF commands will have the value with --target-org before
-    resource.args.push(await ResourceOptions.getTargetOrg());
+    resource.args.push(`"${await ResourceOptions.getTargetOrg()}"`);
   }
 
   private getOutputType(resource: Resource): OutputType {

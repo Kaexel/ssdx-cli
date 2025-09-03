@@ -26,7 +26,7 @@ class Metadata {
     // TODO: move to new metadata class
     await run({
       cmd: 'sf project:deploy:start',
-      args: ['--wait', '30', '--target-org', this.alias, '--ignore-conflicts', '--concise'],
+      args: ['--wait', '30', '--target-org', `"${this.alias}"`, '--ignore-conflicts', '--concise'],
       outputType: OutputType.OutputLive,
     });
 
@@ -37,7 +37,7 @@ class Metadata {
   public async resetTracking(): Promise<void> {
     await run({
       cmd: 'sf project:reset:tracking',
-      args: ['--target-org', this.alias, '--no-prompt'],
+      args: ['--target-org', `"${this.alias}"`, '--no-prompt'],
       spinnerText: 'Resetting Metadata Tracking',
       outputType: OutputType.Spinner,
     });
