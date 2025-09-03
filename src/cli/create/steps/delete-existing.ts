@@ -39,7 +39,7 @@ class OrgManager {
       await this.currentScratchOrg?.refreshAuth();
       return true;
     } catch (error) {
-      logger.error('Error checking scratch org status, likely expired:', error);
+      logger.error(`Error checking scratch org status, likely expired: ${String(error)}`);
       return false;
     }
   }
