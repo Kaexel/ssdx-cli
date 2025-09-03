@@ -13,7 +13,7 @@ class OrgOpener {
 
     await run({
       cmd: 'sf org:open',
-      args: ['--target-org', CreateOptions.scratchOrgName],
+      args: ['--target-org', `"${CreateOptions.scratchOrgName}"`],
       outputType: OutputType.Spinner,
       spinnerText: 'Opened Org Successfully',
     });

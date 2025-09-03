@@ -4,7 +4,7 @@ import { pino } from 'pino';
 const currentDate = new Date().toISOString().slice(0, 10).replace(/-/g, '_');
 
 export const logger = pino({
-  timestamp: pino.stdTimeFunctions.isoTime,
+  timestamp: true,
   transport: {
     targets: [
       {
