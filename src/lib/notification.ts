@@ -23,8 +23,9 @@ export class Notification {
     if (this.disableNotifications || this.notifySendAvailable) return;
     try {
       require.resolve('notify-send');
-    } catch {
       this.notifySendAvailable = true;
+    } catch {
+      this.notifySendAvailable = false;
     }
   }
 
