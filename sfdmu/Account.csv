@@ -1,0 +1,20 @@
+BillingCity,BillingCountry,BillingPostalCode,BillingStreet,FirstName,Id,IsPersonAccount,LastName,Name,Parent.Id,ParentId,PhotoUrl,ShippingCity,ShippingCountry,ShippingStreet,Type
+Oslo,Norway,0354,Pilestredet,,001QI00000hVccwYAC,false,,Fjordbyen Renovasjon AS,,,/services/images/photo/001QI00000hVccwYAC,Oslo,Norway,Pilestredet,Customer
+Oslo,Norway,0162,Karl Johans gate,,001QI00000hVccxYAC,false,,Nordlys Avfall & Miljø AS,,,/services/images/photo/001QI00000hVccxYAC,Oslo,Norway,Karl Johans gate,Customer
+Oslo,Norway,0165,Ullevålsveien,,001QI00000hVccyYAC,false,,Grønne Veier Gjenvinning AS,,,/services/images/photo/001QI00000hVccyYAC,Oslo,Norway,Ullevålsveien,Customer
+Oslo,Norway,0361,Kirkeveien,,001QI00000hVcczYAC,false,,Bykjerne Rens & Resirk AS,,,/services/images/photo/001QI00000hVcczYAC,Oslo,Norway,Kirkeveien,Customer
+Oslo,Norway,0191,Schweigaards gate,,001QI00000hVcd0YAC,false,,Bærekraft Partners AS,,,/services/images/photo/001QI00000hVcd0YAC,Oslo,Norway,Schweigaards gate,Customer
+Oslo,Norway,0658,Etterstadgata,,001QI00000hVcd1YAC,false,,Aker Brygge Drift & Avfall AS,,,/services/images/photo/001QI00000hVcd1YAC,Oslo,Norway,Etterstadgata,Customer
+Oslo,Norway,0153,Akersgata,,001QI00000hVcd2YAC,false,,Vika Næringsavfall AS,,,/services/images/photo/001QI00000hVcd2YAC,Oslo,Norway,Akersgata,Customer
+Oslo,Norway,0182,Kongens gate,,001QI00000hVcd3YAC,false,,Grüner Miljøservice AS,,,/services/images/photo/001QI00000hVcd3YAC,Oslo,Norway,Kongens gate,Customer
+Oslo,Norway,0182,Hausmanns gate,,001QI00000hVcd4YAC,false,,Ring 3 Ressurs AS,,,/services/images/photo/001QI00000hVcd4YAC,Oslo,Norway,Hausmanns gate,Customer
+Oslo,Norway,0162,Torggata,,001QI00000hVcd5YAC,false,,Lars Haugen,,,/services/images/photo/001QI00000hVcd5YAC,Oslo,Norway,Torggata,
+Oslo,Norway,0484,Universitetsgata,,001QI00000hVcd6YAC,false,,Ingrid Solberg,,,/services/images/photo/001QI00000hVcd6YAC,Oslo,Norway,Universitetsgata,
+Oslo,Norway,0182,Sandakerveien,,001QI00000hVcd7YAC,false,,Ola Hermansen,,,/services/images/photo/001QI00000hVcd7YAC,Oslo,Norway,Sandakerveien,
+Oslo,Norway,0254,Storgata,,001QI00000hVcd8YAC,false,,Amalie Nilsen,,,/services/images/photo/001QI00000hVcd8YAC,Oslo,Norway,Storgata,
+Oslo,Norway,0484,Parkveien,,001QI00000hVcd9YAC,false,,Marius Berg,,,/services/images/photo/001QI00000hVcd9YAC,Oslo,Norway,Parkveien,
+Oslo,Norway,0352,Nydalsveien,,001QI00000hVcdAYAS,false,,Aisha Khan,,,/services/images/photo/001QI00000hVcdAYAS,Oslo,Norway,Nydalsveien,
+Oslo,Norway,0556,Hegdehaugsveien,,001QI00000hVcdBYAS,false,,Jonas Ødegaard,,,/services/images/photo/001QI00000hVcdBYAS,Oslo,Norway,Hegdehaugsveien,
+Oslo,Norway,0177,Toftes gate,,001QI00000hVcdCYAS,false,,Sofie Andersen,,,/services/images/photo/001QI00000hVcdCYAS,Oslo,Norway,Toftes gate,
+Oslo,Norway,0355,Fredensborgveien,,001QI00000hVcdDYAS,false,,Henrik Johannessen,,,/services/images/photo/001QI00000hVcdDYAS,Oslo,Norway,Fredensborgveien,
+Oslo,Norway,0355,Bogstadveien,,001QI00000hVcdEYAS,false,,Emma Lund,,,/services/images/photo/001QI00000hVcdEYAS,Oslo,Norway,Bogstadveien,

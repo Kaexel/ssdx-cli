@@ -87,6 +87,11 @@
       "type": "metadata",
       "value": "bin/metadata/permissionsets/post_deploy.permissionset-meta.xml",
       "continue_on_error": true
+    },
+    {
+      "type": "sf",
+      "value": "sf sfdmu run --sourceusername csvfile --path ./sfdmu -w -n",
+      "continue_on_error": true
     }
   ],
   "post_install": [

@@ -114,12 +114,18 @@ The CLI uses a configuration file named `ssdx-config.json` at root level, to def
       "value": "unpackaged"
     },
     {
-      "type": "permissionSet",
+      "type": "permissionSetGroup",
       "value": "PermissionSetGroupDevName"
     },
     {
       "type": "permissionSet",
       "value": "PermissionSetDevName"
+    },
+    ,
+    {
+      // Automatically sets --targetusername when using SFDMU
+      "type": "sf",
+      "value": "sf sfdmu run --sourceusername csvfile --path ./sfdmu -w -n"
     }
   ],
 
