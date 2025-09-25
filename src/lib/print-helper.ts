@@ -36,7 +36,7 @@ export function error(text: string): void {
   try {
     void Notification.showError(text);
   } catch (error) {
-    logger.error(error);
+    logger.error(`Error when dispatching notification: ${String(error)}`);
   }
 
   console.log(colors.bold(colors.red(text)));
