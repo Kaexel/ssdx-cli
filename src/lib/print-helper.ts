@@ -47,6 +47,18 @@ export function code(text: string): void {
 }
 
 /* -------------------------------------------------------------------------- */
+/*                                Notifications                               */
+/* -------------------------------------------------------------------------- */
+
+export function notificationSuccess(text: string): void {
+  try {
+    void Notification.showSuccess(text);
+  } catch (error) {
+    logger.error(`Error when dispatching notification: ${String(error)}`);
+  }
+}
+
+/* -------------------------------------------------------------------------- */
 /*                                   Headers                                  */
 /* -------------------------------------------------------------------------- */
 
