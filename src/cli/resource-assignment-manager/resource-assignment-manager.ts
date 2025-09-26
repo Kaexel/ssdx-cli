@@ -103,7 +103,9 @@ export class ResourceAssignmentManager {
 
     // resource type JS does not need arg --target-org, only SF commands need it
     if (resource.type !== ResourceType.JS) {
-      resource.args.push('--target-org');
+      // SFDMU uses --targetusername instead of --target-org
+      const targetOrgCmd: string = resource.cmd.startsWith('sf sfdmu') ? '--targetusername' : '--target-org';
+      resource.args.push(targetOrgCmd);
     }
 
     // always add the target-org value to the args (if not skipping). JS scripts will be added without name, and SF commands will have the value with --target-org before

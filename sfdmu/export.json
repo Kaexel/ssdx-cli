@@ -1,0 +1,10 @@
+{
+  "objects": [
+    {
+      "query": "SELECT Id,BillingCity,BillingCountry,BillingPostalCode,BillingStreet,FirstName,IsPersonAccount,LastName,Name,Parent.Id,ParentId,PhotoUrl,ShippingCity,ShippingCountry,ShippingStreet,Type FROM Account WHERE Name != 'Sample Account for Entitlements'",
+      "externalId": "Id",
+      "operation": "Upsert",
+      "deleteOldData": true
+    }
+  ]
+}

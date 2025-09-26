@@ -33,7 +33,12 @@ export function warning(text: string): void {
 }
 export function error(text: string): void {
   logger.error(text);
-  void Notification.showError(text);
+  try {
+    void Notification.showError(text);
+  } catch (error) {
+    logger.error(`Error when dispatching notification: ${String(error)}`);
+  }
+
   console.log(colors.bold(colors.red(text)));
 }
 export function code(text: string): void {
@@ -46,16 +51,11 @@ export function code(text: string): void {
 /* -------------------------------------------------------------------------- */
 
 export function notificationSuccess(text: string): void {
-  void Notification.showSuccess(text);
-}
-export function notificationInfo(text: string): void {
-  void Notification.showInfo(text);
-}
-export function notificationWarning(text: string): void {
-  void Notification.showWarning(text);
-}
-export function notificationError(text: string): void {
-  void Notification.showError(text);
+  try {
+    void Notification.showSuccess(text);
+  } catch (error) {
+    logger.error(`Error when dispatching notification: ${String(error)}`);
+  }
 }
 
 /* -------------------------------------------------------------------------- */
