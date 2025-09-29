@@ -237,8 +237,12 @@ export interface CmdResult {
 }
 
 function clearNLines(N: number): void {
-  process.stdout.moveCursor(0, -N);
-  process.stdout.clearScreenDown();
+  try {
+    process.stdout.moveCursor(0, -N);
+    process.stdout.clearScreenDown();
+  } catch (error) {
+    logger.error(error);
+  }
 }
 
 // TODO: move to new method
