@@ -44,7 +44,7 @@ class Dependencies {
         '--targetdevhubusername',
         CreateOptions.targetDevHub,
       ],
-      outputType: OutputType.OutputLiveAndClear,
+      outputType: CreateOptions.ci ? OutputType.OutputLiveWithHeader : OutputType.OutputLiveAndClear,
     });
 
     const spinner = ora('Installed Dependencies Successfully').start();
